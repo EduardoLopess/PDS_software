@@ -1,0 +1,73 @@
+.container-coteudo-item {
+    width: 50vw;
+    height: auto;
+    
+}
+
+
+.titulo-conteudo-item {
+   display: flex;
+   justify-content: center;
+   width: 100%;
+   padding: 0.5rem;
+  
+}
+
+.conteudo-container {
+    display: flex;
+    width: 50vw;
+    height: 5vh;
+    margin: 0.5rem;
+    font-weight: bold;
+    background-color: #CBC8C8;
+}
+
+.conteudo-tipo-item {
+    align-items: center;
+    margin: 1rem;
+    justify-content: flex-start;
+    display: flex;
+    width: 10%;
+}
+
+.conteudo-nome-item {
+    align-items: center;
+    margin: 1rem;
+    justify-content: flex-start;
+    display: flex;
+    width: 35%;
+}
+
+.conteudo-preco-item {
+    align-items: center;
+    margin: 1rem;
+    justify-content: flex-start;
+    display: flex;
+    width: 20%;
+    
+}
+
+.conteudo-disponivel-item {
+    width: 20%;
+    align-items: center;
+    margin: 1rem;
+    justify-content: flex-start;
+    display: flex;
+
+}
+
+.conteudo-btn-item {
+     width: 20%;
+    align-items: center;
+    margin: 1rem;
+    justify-content:center;
+    display: flex;
+}
+
+.conteudo-btn-item button {
+    width: 50%;
+    background-color: green;
+    border: none;
+    height: 1.5rem;
+    cursor: pointer;
+}

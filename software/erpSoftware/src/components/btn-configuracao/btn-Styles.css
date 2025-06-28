@@ -1,0 +1,18 @@
+.btnCadastro {
+    margin: 1vw;
+    height: 5vh;
+    width: 15vw;
+    background-color: transparent;
+    border-radius: 10px;
+    border: 1px solid black
+}
+
+
+.btnCadastro.ativo {
+    background-color: #5194A3;
+    border: 2px solid;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}

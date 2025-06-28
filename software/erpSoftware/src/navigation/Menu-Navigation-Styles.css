@@ -1,0 +1,41 @@
+.container-menu {
+    display: flex;
+    width: 100vw;
+    height: 15vh;
+    background-color: #FFFFFF;
+    align-items: center;
+}
+
+
+.container-links {
+    display: flex;
+    align-items: center;
+    margin: 5vh;
+    gap: 15px
+}
+
+
+/* LINK STYLE */
+.container-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 190px; 
+  height: 50px; 
+  justify-content: center;
+  padding: 10px 20px;
+}
+
+.container-links.ativo {
+  background-color: #5194A3;
+  border: 2px solid;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+
+}
+
+
+
+
