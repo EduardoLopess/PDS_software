@@ -2,17 +2,20 @@ import { useEffect, useState } from 'react'
 import { Mesa } from '../../components/mesa/Index'
 import './Mesas-Screen-Style.css'
 import { getMesas } from '../../service/api/MesaService'
+import { usePedido } from '../../context/PedidoContext'
 
 export const MesaScreen = () => {
     const [mesaData, setMesa] = useState([])
     const [statusFilter, setStatusFilter] = useState(null)
     const [termoBusca, setTermoBusca] = useState('')
+    const { setMesaDataContext } = usePedido()
 
     useEffect(() => {
         getMesas()
             .then(res => {
                 console.log('Resposta da API MESAS', res.data.data)
                 setMesa(res.data.data)
+                setMesaDataContext(res.data.data)
             })
             .catch(err => console.error('Erro ao buscar mesas', err))
     }, [])

@@ -1,0 +1,11 @@
+.container-carrinho {
+  position: relative; 
+  z-index: 10; 
+}
+
+
+.modal-container {
+    width: 200px;
+    height: 100px;
+    background-color: aquamarine;
+}

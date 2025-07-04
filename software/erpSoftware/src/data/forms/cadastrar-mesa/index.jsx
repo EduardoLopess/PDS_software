@@ -34,37 +34,19 @@ export const FormCadastrarMesa = () => {
 
 
     return (
-        <div className="container-form-mesa">
-            <div className="container-btn-mesa">
-                <button>
-                    <p>EDITAR MESA</p>
-                </button>
-                <button>
-                    <p>DELETAR MESA</p>
-                </button>
-            </div>
-            <div className="container-form">
-                <form onSubmit={handleSubmit}>
-                    <div className="container-input">
-                        <p>*Número da mesa</p>
-                        <input
-                            type="text"
-                            placeholder="Número da mesa"
-                            value={numeroMesa}
-                            onChange={(e) => {
-                                const onlyNumber = e.target.value.replace(/\D/g, '')
-                                setNumeroMesa(onlyNumber)
-                            }
-                            }
-                        />
-                    </div>
-                    <div className="btn-form">
-                        <button type='submit'>Cadastrar</button>
-                    </div>
-                    {erro && <p style={{ color: 'red' }}>{erro}</p>}
-
-                </form>
-            </div>
+       
+        <div className='container-form' style={{padding: 70}}>
+            <button className="buttom-mesa">
+                <p>NOVA MESA</p>
+            </button>
+            <button className="buttom-mesa">
+                <p>DELETAR MESA</p>
+            </button>
+            <button className="buttom-mesa">
+                <p>ATUALIZAR MESA</p>
+            </button>
         </div>
+
+       
     )
 }

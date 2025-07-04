@@ -7,6 +7,6 @@ export const getSabor = () => {
     return axios.get(API)
 }
 
-export const postSabor = () => {
-    return axios.post(API)
+export const postSabor = (sabor) => {
+    return axios.post(API, sabor)
 }

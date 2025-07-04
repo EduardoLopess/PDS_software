@@ -1,33 +1,60 @@
-.container-form-mesa{
-    width: 40%;
-    height: 50vh;
-    background-color: white;
-    border-radius: 20px;
+.container-form {
     display: flex;
     flex-direction: column;
+    width: 50vw;
+    height: 50vh;
+    background-color: white;
+    position: relative;
+    padding-top: 1.5rem;
     align-items: center;
-}   
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
 
-.container-btn-mesa{
+}
+
+.container-form input,
+select {
+    width: 50%;
+    height: 5vh;
+    margin: 0.5rem;
+    padding-left: 10px;
+
+}
+
+.container-form label {
+    align-items: flex-start;
+}
+
+
+.container-btn {
     width: 100%;
-    height: 20%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    align-items: center;
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
-    gap: 1rem;
-
 }
 
-.container-btn-mesa button {
-    width: 120px;
-    height: 30px;
-
+.container-btn button {
+    width: 200px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 2rem;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+    background-color: #21a3a3;
+    color: white;
+    font-weight: bold;
 }
 
-.container-input input {
-    width: 15vw;
-    height: 5vh;
-    padding: 10px;
-    border-radius: 10px;
-    
+
+.buttom-mesa {
+    width: 50%;
+    height: 4rem;
+    margin: 1rem;
+    border: none;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
 }

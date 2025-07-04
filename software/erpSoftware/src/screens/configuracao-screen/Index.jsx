@@ -7,13 +7,12 @@ import './Config-Screen-Styles.css'
 import { FormCadastrarMesa } from "../../data/forms/cadastrar-mesa"
 import { FormCadastrarProduto } from "../../data/forms/cadastrar-produto/Infex"
 import { FormCadastrarAdicional } from "../../data/forms/cadastrar-adicional/Index"
+import { FormCadastrarSabor } from "../../data/forms/cadastrar-sabor/Index"
 
 export const ConfiguracaoScreen = () => {
     const [titulo, setTitulo] = useState('')
     const [ativo, setAtivo] = useState(false)
     const [formAtivo, setFormAtivo] = useState(false)
-
-
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10}}>
@@ -47,7 +46,10 @@ export const ConfiguracaoScreen = () => {
                     />
                     <BtnCriarSaborDrink
                         ativo={ativo == 'sabor'}
-                        onClick={() => setAtivo('sabor')}
+                         onClick={() => {
+                            setAtivo('sabor')
+                            setFormAtivo('saborForm')
+                        }}
                         setTitulo={setTitulo}
                     />
                 </div>
@@ -62,6 +64,7 @@ export const ConfiguracaoScreen = () => {
                         {formAtivo == 'mesaForm' && <FormCadastrarMesa/>}
                         {formAtivo == 'adicionalForm' && <FormCadastrarAdicional/>}
                         {formAtivo == 'produtoForm' && <FormCadastrarProduto/>}
+                        {formAtivo == 'saborForm' && <FormCadastrarSabor/>}
                         
 
                     </div>

@@ -5,25 +5,32 @@ import { MenuNavegacao } from "./navigation/Menu-Navigation";
 import { PedidoScreen } from "./screens/pedidos-screen/Index";
 import { ConfiguracaoScreen } from "./screens/configuracao-screen/Index";
 import { VendaScreen } from "./screens/venda-screen/Index";
+import { PedidoProvider } from "./context/PedidoContext";
+import { CarrinhoProvider } from "./context/CarrinhoContext";
+import { PedidoView } from "./screens/pedidos-screen/PedidoView";
 
 
 
 function App() {
-  
+
 
   return (
-   <BrowserRouter>
-    <MenuNavegacao/>
-    <Routes>
-      <Route path='/' element = {<MesaScreen/>}/>
-      <Route path='/venda' element = {<VendaScreen/>}/>
-      <Route path='/produtos' element = {<ProdutoScreen/>}/>
-      <Route path='/pedidos' element = {<PedidoScreen/>}/>
-      <Route path='/configuracao' element = {<ConfiguracaoScreen/>}/>
-    </Routes>
-   
-   
-   </BrowserRouter>
+
+    <BrowserRouter>
+      <PedidoProvider>
+        <CarrinhoProvider>
+          <MenuNavegacao />
+          <Routes>
+            <Route path='/' element={<MesaScreen />} />
+            <Route path='/venda' element={<VendaScreen />} />
+            <Route path='/produtos' element={<ProdutoScreen />} />
+            <Route path='/pedidos' element={<PedidoView />} />
+            <Route path='/configuracao' element={<ConfiguracaoScreen />} />
+          </Routes>
+        </CarrinhoProvider>
+      </PedidoProvider>
+    </BrowserRouter>
+
   )
 }
 
