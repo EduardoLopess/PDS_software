@@ -1,4 +1,4 @@
-export const AlaminutaItem = ({ produtos }) => {
+export const AlaminutaItem = ({ produtos, numeroMesaPedido }) => {
     if (!Array.isArray(produtos)) {
         return null; // ou <p>Carregando...</p>
     }
@@ -37,10 +37,13 @@ export const AlaminutaItem = ({ produtos }) => {
                                 <div className='conteudo-disponivel-item'>
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
-                                <div className='conteudo-btn-item'>
-                                    <button>
-                                        <p>+</p>
-                                    </button>
+                                 <div className='conteudo-btn-item'>
+                                    {numeroMesaPedido != null && (
+                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                            <p>+</p>
+                                        </button>
+                                    )}
+
                                 </div>
                             </div>
                         </div>

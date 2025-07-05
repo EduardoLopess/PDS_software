@@ -1,4 +1,9 @@
-export const SemAlcoolItem = ({ produtos }) => {
+import { useCarrinho } from "../../../context/CarrinhoContext";
+import { FormatarTiposProdutos } from "../../../utils/FormatarTipos";
+
+export const SemAlcoolItem = ({ produtos, numeroMesaPedido }) => {
+
+    const { adicionarItemCarrinho } = useCarrinho()
 
     if (!Array.isArray(produtos)) {
         return null; // ou <p>Carregando...</p>
@@ -20,7 +25,7 @@ export const SemAlcoolItem = ({ produtos }) => {
             {Object.keys(grupos).map((tipo) => (
                 <div key={tipo} className='grupo-tipo-produto'>
                     <div className='titulo-conteudo-item'>
-                        <p>{tipo}</p>
+                        <p>{FormatarTiposProdutos(tipo)}</p>
                     </div>
 
                     {grupos[tipo].map((produto) => (
@@ -39,9 +44,13 @@ export const SemAlcoolItem = ({ produtos }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    <button>
-                                        <p>+</p>
-                                    </button>
+                                    {numeroMesaPedido != null && (
+                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                            <p>+</p>
+                                        </button>
+                                    )}
+
+
                                 </div>
                             </div>
                         </div>

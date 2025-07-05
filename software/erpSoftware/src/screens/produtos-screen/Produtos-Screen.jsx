@@ -14,18 +14,27 @@ import { AlaMinutaCategoria } from '../../components/produto-categorias/alaminut
 import { AlaminutaItem } from '../../components/produto-categorias/alaminuta-categoria/AlaminutaItem'
 import { getProdutos } from '../../service/api/ProdutoService'
 import { Carrinho } from '../../components/carrinho/Carrinho'
+import { useCarrinho } from '../../context/CarrinhoContext'
+import { useLocation } from 'react-router-dom'
 
 export const ProdutoScreen = () => {
+
+    const location = useLocation()
+    const numeroMesaPedido = location.state?.numeroMesa
+    console.log("NUMERO MESA PEDIDO")
+
     const [tituloCategoria, setTituloCategoria] = useState('ESCOLHA UMA CATEGORIA')
     const [ativo, setAtivo] = useState('')
     const [conteudoCategoria, setConteudoCategoria] = useState()
     const [produtos, setProdutos] = useState([])
+    const { setProdutosDataContext } = useCarrinho()
 
     useEffect(() => {
         getProdutos()
             .then(res => {
                 console.log('Resposta da API:', res.data);
                 setProdutos(res.data.data);
+                setProdutosDataContext(res.data.data)
             })
             .catch(err => console.error('Erro ao buscar produtos', err));
     }, []);
@@ -105,26 +114,34 @@ export const ProdutoScreen = () => {
                 <div className='coluna-conteudo'>
                     <div className='container-titulo-carrinho-produtoScreen'>
                         <h2>{tituloCategoria}</h2>
-                        <Carrinho/>
+                        <Carrinho />
                     </div>
                     <div className='containerConteudo-produtoScreen'>
                         {conteudoCategoria === 'pastel' && <PastelList
+                            numeroMesaPedido={numeroMesaPedido}
                             produtos={filtrarProdutos('Pasteis')}
                         />}
                         {conteudoCategoria === 'cerveja' && <CervejaItem
+                            numeroMesaPedido={numeroMesaPedido}
                             produtos={filtrarProdutos('Cerveja')}
                         />}
                         {conteudoCategoria === 'drink' && <Drink
+                            numeroMesaPedido={numeroMesaPedido}
                             produtos={filtrarProdutos('Drink')}
                         />}
                         {conteudoCategoria === 'porcao' && <PorcaoItem
+                            numeroMesaPedido={numeroMesaPedido}
                             produtos={filtrarProdutos('Porcoes')}
                         />}
                         {conteudoCategoria === 'semAlcool' && <SemAlcoolItem
+                            numeroMesaPedido={numeroMesaPedido}
                             produtos={filtrarProdutos('SemAlcool')}
                         />}
                         {conteudoCategoria === 'alaminuta' && <AlaminutaItem
-                            produtos={filtrarProdutos('Alaminuta')}
+                            numeroMesaPedido={numeroMesaPedido}
+                            produtos={filtrarProdutos('Alaminuta')
+
+                            }
                         />}
                     </div>
                 </div>

@@ -1,7 +1,14 @@
 import '../produto-categoria-style/Item-Categoria-Style.css';
+import { IoPencilOutline } from "react-icons/io5";
+import { useEditarProduto } from '../hoock/EditarProduto';
+import { useCarrinho } from '../../../context/CarrinhoContext';
+
+export const PorcaoItem = ({ produtos, numeroMesaPedido }) => {
+
+    const { adicionarItemCarrinho } = useCarrinho ()
+    const { editarProduto } = useEditarProduto()
 
 
-export const PorcaoItem = ({ produtos }) => {
     if (!Array.isArray(produtos)) {
         return null; // ou <p>Carregando...</p>
     }
@@ -36,15 +43,21 @@ export const PorcaoItem = ({ produtos }) => {
                                     <p>{produto.nomeProduto}</p>
                                 </div>
                                 <div className='conteudo-preco-item'>
-                                    <p>{produto.precoProdutoFormatado}</p>
+                                    <p>R$: {produto.precoProdutoFormatado}</p>
                                 </div>
                                 <div className='conteudo-disponivel-item'>
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    <button>
-                                        <p>+</p>
-                                    </button>
+                                    {numeroMesaPedido != null ? (
+                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                            <p>+</p>
+                                        </button>
+                                    ) : (
+                                        <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
+                                            <IoPencilOutline size={24} />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>

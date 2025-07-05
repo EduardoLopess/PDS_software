@@ -17,10 +17,10 @@ export const Mesa = ({ id, numeroMesa, statusMesa }) => {
             cancelButtonText: 'Não',
         }).then((result) => {
             if (result.isConfirmed) {
-                // usuário clicou em Sim
-                iniciarPedido(idMesa);  // sua função para iniciar pedido
+                
+                iniciarPedido(idMesa);  
             } else {
-                // usuário clicou em Não ou fechou o modal
+                
                 console.log('Pedido não iniciado');
             }
         });

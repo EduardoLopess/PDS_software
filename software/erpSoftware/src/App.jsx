@@ -17,8 +17,8 @@ function App() {
   return (
 
     <BrowserRouter>
-      <PedidoProvider>
-        <CarrinhoProvider>
+      <CarrinhoProvider>     
+        <PedidoProvider>     
           <MenuNavegacao />
           <Routes>
             <Route path='/' element={<MesaScreen />} />
@@ -27,8 +27,8 @@ function App() {
             <Route path='/pedidos' element={<PedidoView />} />
             <Route path='/configuracao' element={<ConfiguracaoScreen />} />
           </Routes>
-        </CarrinhoProvider>
-      </PedidoProvider>
+        </PedidoProvider>
+      </CarrinhoProvider>
     </BrowserRouter>
 
   )

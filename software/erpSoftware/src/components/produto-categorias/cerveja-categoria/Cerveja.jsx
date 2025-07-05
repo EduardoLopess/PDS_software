@@ -1,8 +1,12 @@
+import { useCarrinho } from '../../../context/CarrinhoContext';
 import { FormatarTiposProdutos } from '../../../utils/FormatarTipos';
 import '../produto-categoria-style/Item-Categoria-Style.css'
 
 
-export const CervejaItem = ({ produtos }) => {
+export const CervejaItem = ({ produtos, numeroMesaPedido }) => {
+    const { adicionarItemCarrinho } = useCarrinho()
+
+
     if (!Array.isArray(produtos)) {
         return null; // ou <p>Carregando...</p>
     }
@@ -36,15 +40,18 @@ export const CervejaItem = ({ produtos }) => {
                                     <p>{produto.nomeProduto}</p>
                                 </div>
                                 <div className='conteudo-preco-item'>
-                                    <p>{produto.precoProdutoFormatado}</p>
+                                    <p>R$: {produto.precoProdutoFormatado}</p>
                                 </div>
                                 <div className='conteudo-disponivel-item'>
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    <button>
-                                        <p>+</p>
-                                    </button>
+                                    {numeroMesaPedido != null && (
+                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                            <p>+</p>
+                                        </button>
+                                    )}
+
                                 </div>
                             </div>
                         </div>

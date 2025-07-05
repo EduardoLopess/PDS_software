@@ -1,38 +1,79 @@
-import { useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Button, Box } from "@chakra-ui/react";
-import { useCarrinho } from "../../context/CarrinhoContext";
-import { IoCartOutline } from "react-icons/io5";
-import './Carrinho-Style.css';
+import { useState } from "react"
+import { IoCartOutline } from "react-icons/io5"
+import { useCarrinho } from "../../context/CarrinhoContext"
+import './Carrinho-Style.css'
+import { usePedido } from "../../context/PedidoContext"
+import { FormatarTiposProdutosCarrinho } from "../../utils/FormatarTipos"
 
 export const Carrinho = () => {
-    const { carrinhoVisivel } = useCarrinho();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+  const { carrinhoVisivel, itemCarrinho, removerItemCarrinho, totalItens } = useCarrinho()
+  const { numeroMesaContext, finalizarPedido, cancelarPedido } = usePedido()
 
-    if (!carrinhoVisivel) return null;
+  const [drawerAberto, setDrawerAberto] = useState(false)
 
-    return (
-        <div className="container-carrinho">
-            <button onClick={onOpen} style={{ all: 'unset', cursor: 'pointer' }}>
-                <IoCartOutline size={45} color="black" />
-            </button>
+  console.log("ITEM CARRINHO: ", itemCarrinho)
 
-            <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
-                <DrawerOverlay />
-                <DrawerContent>
-                    <DrawerCloseButton />
-                    <DrawerHeader>Carrinho de Compras</DrawerHeader>
+  if (!carrinhoVisivel) return null
 
-                    <DrawerBody>
-                        {/* Aqui você pode renderizar os itens do carrinho */}
-                        <Box mb={4}>
-                            Nenhum item ainda.
-                        </Box>
+  return (
+    <>
+      {/* Botão que abre o carrinho */}
+      <div className="container-carrinho">
+        <button onClick={() => setDrawerAberto(true)} className="botao-carrinho">
+          <IoCartOutline size={40} />
+        </button>
+      </div>
 
-                        <Button colorScheme="red" onClick={onClose}>
-                            Fechar
-                        </Button>
-                    </DrawerBody>
-                </DrawerContent>
-            </Drawer>
+      {/* Backdrop (fundo escuro) */}
+      {drawerAberto && <div className="carrinho-backdrop" onClick={() => setDrawerAberto(false)} />}
+
+      {/* Drawer */}
+      <div className={`carrinho-drawer ${drawerAberto ? 'aberto' : ''}`}>
+        <div className="cabecalho-carrinho">
+          <h2>PEDIDO MESA: {numeroMesaContext}</h2>
+
+          <button onClick={() => setDrawerAberto(false)} className="btn-fechar">✕</button>
         </div>
-    );
-};
+        <div className="conteudo-carrinho">
+          {itemCarrinho.length > 0 ? (
+            itemCarrinho.map((item, index) => (
+              <div key={index} className="container-itemDrawer">
+                <div className="itemTipoProduto-itemDrawer">
+                  <p>{FormatarTiposProdutosCarrinho(item.tipo)}</p>
+                </div>
+                <div className="itemNome-itemDrawer">
+                  <p>{item.nome}</p>
+                </div>
+                <div className="itemPreco-itemDrawer">
+                  <p>R$: {item.preco}</p>
+                </div>
+                <div className="itemQtd-itemDrawer">
+                  <p>{item.qtd}x</p>
+                </div>
+                <div className="btnRemover-itemDrawer">
+                  <button onClick={() => removerItemCarrinho(item.id)}>-</button>
+                </div>
+              </div>
+
+            ))
+          ) : (
+            <p>Nenhum item no carrinho ainda.</p>
+          )}
+
+          <div className="container-total-drawer">
+            {totalItens > 0 && (
+              <p>R$: {totalItens.toFixed(2)}</p>
+            )}
+
+          </div>
+
+
+        </div>
+        <div className="rodape-carrinho">
+          <button onClick={() => cancelarPedido()} className="btn-finalizar">CANCELAR</button>
+          <button onClick={() => finalizarPedido()} className="btn-finalizar" style={{ background: 'green' }}>FINALIZAR</button>
+        </div>
+      </div>
+    </>
+  )
+}

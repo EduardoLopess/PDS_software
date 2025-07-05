@@ -1,66 +1,77 @@
 .container-coteudo-item {
-    width: 50vw;
+    width: 100%;
     height: auto;
-    
+
 }
 
 
 .titulo-conteudo-item {
-   display: flex;
-   justify-content: center;
-   width: 100%;
-   padding: 0.5rem;
-  
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5rem;
+
 }
 
 .conteudo-container {
     display: flex;
-    width: 50vw;
+    width: 100%;
     height: 5vh;
-    margin: 0.5rem;
+    margin-top: 5px;
+    margin-bottom: 5px;
     font-weight: bold;
-    background-color: #CBC8C8;
+    background-color: #eee;
 }
 
 .conteudo-tipo-item {
     align-items: center;
-    margin: 1rem;
+   margin: 0 1rem;
     justify-content: flex-start;
     display: flex;
     width: 10%;
+    font-size: 12px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    height: 100%;
+
 }
+
 
 .conteudo-nome-item {
     align-items: center;
-    margin: 1rem;
+   
     justify-content: flex-start;
     display: flex;
     width: 35%;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    height: 100%;
 }
 
 .conteudo-preco-item {
     align-items: center;
-    margin: 1rem;
     justify-content: flex-start;
     display: flex;
-    width: 20%;
-    
+    width: 25%;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    height: 100%;
+    margin-left: 10px;
+
 }
 
 .conteudo-disponivel-item {
-    width: 20%;
+    width: 30%;
     align-items: center;
-    margin: 1rem;
-    justify-content: flex-start;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    height: 100%;
+    justify-content: center;
     display: flex;
 
 }
 
 .conteudo-btn-item {
-     width: 20%;
+    width: 20%;
     align-items: center;
     margin: 1rem;
-    justify-content:center;
+    justify-content: center;
     display: flex;
 }
 

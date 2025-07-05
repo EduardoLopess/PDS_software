@@ -11,3 +11,8 @@ export const getProdutos = () => {
 export const criarProduto = (produto) => {
     return axios.post(API, produto)
 }
+
+//ATUALIZAR
+export const putProduto = (id, data) => {
+  return axios.put(`${API}/${id}`, data)
+}

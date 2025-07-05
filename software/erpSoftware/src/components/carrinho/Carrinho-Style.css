@@ -1,11 +1,166 @@
 .container-carrinho {
-  position: relative; 
-  z-index: 10; 
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.botao-carrinho {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.carrinho-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+.carrinho-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 350px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s ease;
+}
+
+.carrinho-drawer.aberto {
+  right: 0;
+}
+
+.cabecalho-carrinho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.btn-fechar {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.conteudo-carrinho {
+  padding-top: 10px;
+  flex: 1;
+
+  overflow-y: auto;
+  position: relative;
+}
+
+.rodape-carrinho {
+  padding: 16px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-finalizar {
+  width: 100%;
+  padding: 12px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 
-.modal-container {
-    width: 200px;
-    height: 100px;
-    background-color: aquamarine;
+
+/* ITEM */
+.container-itemDrawer {
+  width: 100%;
+  height: 3.5rem;
+  background-color: #eee;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1px;
+}
+
+.itemNome-itemDrawer {
+  width: 35%;
+  display: flex;
+  justify-content: flex-start;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  white-space: normal;
+  word-break: break-word;
+  font-size: 13px;
+  padding: 5px;
+}
+
+
+.itemPreco-itemDrawer {
+  width: 25%;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.itemQtd-itemDrawer {
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnRemover-itemDrawer {
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnRemover-itemDrawer button {
+  width: 50%;
+  height: 50%;
+  background-color: red;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+
+}
+
+.itemTipoProduto-itemDrawer {
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  /* preto bem suave */
+}
+
+
+.itemTipoProduto-itemDrawer p {
+  font-size: 10px;
+}
+
+.container-total-drawer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 5rem;
+  font-size: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }

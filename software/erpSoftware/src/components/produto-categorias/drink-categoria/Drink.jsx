@@ -2,7 +2,7 @@ import { FormatarTiposProdutos } from '../../../utils/FormatarTipos';
 import '../produto-categoria-style/Item-Categoria-Style.css'
 
 
-export const Drink = ({produtos}) => {
+export const Drink = ({ produtos, numeroMesaPedido }) => {
     if (!Array.isArray(produtos)) {
         return null; // ou <p>Carregando...</p>
     }
@@ -36,15 +36,18 @@ export const Drink = ({produtos}) => {
                                     <p>{produto.nomeProduto}</p>
                                 </div>
                                 <div className='conteudo-preco-item'>
-                                    <p>{produto.precoProdutoFormatado}</p>
+                                    <p>R$: {produto.precoProdutoFormatado}</p>
                                 </div>
                                 <div className='conteudo-disponivel-item'>
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    <button>
-                                        <p>+</p>
-                                    </button>
+                                    {numeroMesaPedido != null && (
+                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                            <p>+</p>
+                                        </button>
+                                    )}
+
                                 </div>
                             </div>
                         </div>
