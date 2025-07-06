@@ -7,29 +7,42 @@ export const Mesa = ({ id, numeroMesa, statusMesa }) => {
 
     const { iniciarPedido } = usePedido()
 
-    const confirmarInicioPedido = (numeroMesa, idMesa) => {
-        Swal.fire({
-            title: 'INICIAR PEDIDO?',
-            text: `MESA ${numeroMesa}`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Não',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                
-                iniciarPedido(idMesa);  
-            } else {
-                
-                console.log('Pedido não iniciado');
-            }
-        });
+
+
+    const iniciar = () => {
+        if (statusMesa) {
+            Swal.fire({
+                title: 'Mesa ocupada, deseja editar o pedido?',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, EDITAR!',
+                cancelButtonText: 'Não'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log('Iniciar edição');
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'INICIAR PEDIDO?',
+                text: `MESA ${numeroMesa}`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    iniciarPedido({ id, numero: numeroMesa }); // <- Envia objeto direto
+                }
+            });
+        }
     };
 
 
 
+
+
     return (
-        <button style={{ all: 'unset', cursor: 'pointer' }} onClick={() => confirmarInicioPedido(numeroMesa, id)}>
+        <button style={{ all: 'unset', cursor: 'pointer' }} onClick={iniciar}>
             <div className='cardMesa'>
                 <div className='cardNumeroMesa'>
                     <p>MESA {numeroMesa}</p>

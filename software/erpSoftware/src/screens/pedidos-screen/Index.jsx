@@ -1,13 +1,49 @@
 import { useNavigate } from 'react-router-dom'
 import { PedidoItem } from '../../components/pedido/Index'
 import './Pedido-screen.css'
+import Swal from 'sweetalert2';
+
 import { useState } from 'react'
+import { usePedido } from '../../context/PedidoContext'
 
 export const PedidoScreen = ({ pedidos }) => {
 
     const navigate = useNavigate()
     const [pedidoNumeroMesa, setPedidoNumeroMesa] = useState('')
     const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+    const { editarPedido } = usePedido()
+
+    const iniciarEdicao = (id) => {
+
+        Swal.fire({
+            title: 'Mesa ocupada, deseja editar o pedido?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, EDITAR!',
+            cancelButtonText: 'Não'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                editarPedido(id)
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "info",
+                    title: "Edição do pedido iniciada"
+                });
+            }
+        });
+
+    }
+
+
 
 
     console.dir(pedidoSelecionado, { depth: null });
@@ -103,15 +139,52 @@ export const PedidoScreen = ({ pedidos }) => {
 
 
                     <div className='container-buttons-pedidoScreen'>
-                        <button className='buttom-container-detalhes' style={{ background: 'red' }} >
+                        <button className='buttom-container-detalhes' style={{ background: 'red' }} onClick={() => {
+                            if (pedidoSelecionado) {
+                                iniciarEdicao(pedidoSelecionado.id);
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Nenhum pedido selecionado',
+                                    text: 'Por favor, selecione um pedido para cancelar.',
+                                });
+                            }
+                        }}
+                        >
                             <p>CANCELAR PEDIDO</p>
                         </button>
-                        <button className='buttom-container-detalhes' style={{ background: 'green' }} >
+                        <button className='buttom-container-detalhes' style={{ background: 'green' }} onClick={() => {
+                            if (pedidoSelecionado) {
+                                iniciarEdicao(pedidoSelecionado.id);
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Nenhum pedido selecionado',
+                                    text: 'Por favor, selecione um pedido antes de cobrar.',
+                                });
+                            }
+                        }}
+                        >
                             <p>COBRAR</p>
                         </button>
-                        <button className='buttom-container-detalhes' style={{ background: 'blue' }} >
+                        <button
+                            className='buttom-container-detalhes'
+                            style={{ background: 'blue' }}
+                            onClick={() => {
+                                if (pedidoSelecionado) {
+                                    iniciarEdicao(pedidoSelecionado.id);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Nenhum pedido selecionado',
+                                        text: 'Por favor, selecione um pedido antes de editar.',
+                                    });
+                                }
+                            }}
+                        >
                             <p>EDITAR</p>
                         </button>
+
                     </div>
 
                 </div>

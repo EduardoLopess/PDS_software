@@ -18,23 +18,30 @@ export const CarrinhoProvider = ({ children }) => {
 
     useEffect(() => {
         if (itemCarrinho.length === 0) {
-            setCarrinhoVisivel(false)
-        } else {
-            setCarrinhoVisivel(true)
+            setCarrinhoVisivel(false);
+            setTotalItens(0);
+            return;
         }
 
+        setCarrinhoVisivel(true);
+
         const total = itemCarrinho.reduce((acc, item) => {
-            const precoNum = Number(item.preco.replace(',', '.')) || 0
-            return acc + precoNum * item.qtd
-        }, 0)
+            const precoBase = Number(item.preco.replace(',', '.')) || 0;
+            const precoAdicionais = (item.adicionais || []).reduce((soma, adicional) => {
+                const valor = Number(String(adicional.precoAdicional).replace(',', '.')) || 0;
+                return soma + valor * (adicional.quantidade || 1);
+            }, 0);
 
-        setTotalItens(total)
+            return acc + (precoBase + precoAdicionais) * item.qtd;
+        }, 0);
 
-    }, [itemCarrinho])
+        setTotalItens(total);
+    }, [itemCarrinho]);
+
 
 
     const Toast = Swal.mixin({
-        toast: false, // <-- MUITO IMPORTANTE: vira modal real
+        toast: false,
         position: 'center',
         showConfirmButton: false,
         timer: 1000,
@@ -51,59 +58,42 @@ export const CarrinhoProvider = ({ children }) => {
         if (!Array.isArray(produtoData) || produtoData.length === 0)
             return;
 
-        const produto = produtoData.find(p => p.id === produtoId)
+        const produto = produtoData.find(p => p.id === produtoId);
 
-        if (!produto) {
-            return
-        }
+        if (!produto) return;
 
         setItemCarrinho(prevCarrinho => {
+            // Procurar somente item SEM adicionais
             const produtoPresente = prevCarrinho.find(
-                item => item.id === produtoId
-            )
+                item => item.id === produtoId && (!item.adicionais || item.adicionais.length === 0)
+            );
 
             if (produtoPresente) {
                 return prevCarrinho.map(item =>
-                    item.id === produtoId
+                    item.id === produtoId && (!item.adicionais || item.adicionais.length === 0)
                         ? { ...item, qtd: item.qtd + 1 }
                         : item
-                )
+                );
             } else {
                 return [...prevCarrinho, {
                     id: produto.id,
                     nome: produto.nomeProduto,
                     preco: produto.precoProdutoFormatado,
                     tipo: produto.tipoProduto,
-                    qtd: 1
-                }]
+                    qtd: 1,
+                    adicionais: [],
+                    adicionaisKey: '',
+                }];
             }
+        });
 
-        })
         Toast.fire({
             icon: 'success',
             title: 'Item salvo com sucesso!',
-            customClass: {
-                popup: 'mini-toast'
-            },
-            didOpen: () => {
-                const popup = document.querySelector('.mini-toast')
-                if (popup) {
-                    popup.style.width = '250px'
-                    popup.style.fontSize = '14px'
-                    popup.style.padding = '10px'
-                }
+            customClass: { popup: 'mini-toast' }
+        });
+    };
 
-                const progressBar = document.querySelector('.swal2-timer-progress-bar')
-                if (progressBar) {
-                    progressBar.style.backgroundColor = '#4caf50'
-                    progressBar.style.height = '4px'
-                }
-            }
-        })
-
-
-
-    }
 
     const adicionarSaborCarrinho = (idSabor, idDrink) => {
 
@@ -172,13 +162,11 @@ export const CarrinhoProvider = ({ children }) => {
         console.log("ITEM CONTEXT::\n", JSON.stringify(item, null, 2));
 
         setItemCarrinho(prevCarrinho => {
-            // Cria um identificador único para esse conjunto de adicionais
             const adicionaisKey = item.adicionais
                 .map(adc => `${adc.id}-${adc.quantidade}`)
-                .sort() // importante para garantir ordem previsível
+                .sort()
                 .join(',');
 
-            // Verifica se já existe item igual no carrinho
             const itemExistente = prevCarrinho.find(carrinhoItem => {
                 if (carrinhoItem.id !== item.produto.id) return false;
                 if (!carrinhoItem.adicionaisKey) return false;
@@ -220,54 +208,84 @@ export const CarrinhoProvider = ({ children }) => {
     };
 
 
-    const removerItemCarrinho = (id, categoria, idSabor) => {
-        if (idSabor) {
-            setItemCarrinho(prevCarrinho => {
-                const itemPresente = prevCarrinho.find(item => item.id === id && item.idSabor === idSabor);
+    const removerItemCarrinho = (id, categoria, idSabor, adicionaisKey = '') => {
+        setItemCarrinho(prevCarrinho => {
+            return prevCarrinho.map(item => {
+                const mesmoItemSemAdicionais = item.id === id &&
+                    item.categoria === categoria &&
+                    (item.adicionaisKey || '') === (adicionaisKey || '');
 
-                if (itemPresente) {
-                    if (itemPresente.qtd > 1) {
-                        return prevCarrinho.map(drinkSabor =>
-                            drinkSabor.id === id && drinkSabor.idSabor === idSabor
-                                ? { ...drinkSabor, qtd: drinkSabor.qtd - 1 }
-                                : drinkSabor
-                        );
+                const mesmoItemComSabor = idSabor &&
+                    item.id === id &&
+                    item.idSabor === idSabor;
+
+                if (mesmoItemSemAdicionais || mesmoItemComSabor) {
+                    if (item.qtd > 1) {
+                        return { ...item, qtd: item.qtd - 1 };
                     } else {
-                        return prevCarrinho.filter(drinkSabor =>
-                            drinkSabor.id !== id || drinkSabor.idSabor !== idSabor
-                        );
-                    }
-                } else {
-                    return prevCarrinho;
-                }
-            });
-        } else {
-            setItemCarrinho(prevCarrinho => {
-                const itemPresente = prevCarrinho.find(itemCarrinho => itemCarrinho.id === id && itemCarrinho.categoria === categoria);
-
-                if (itemPresente) {
-                    if (itemPresente.qtd > 1) {
-                        return prevCarrinho.map(itemCarrinho =>
-                            itemCarrinho.id === id && itemCarrinho.categoria === categoria
-                                ? { ...itemCarrinho, qtd: itemCarrinho.qtd - 1 }
-                                : itemCarrinho
-                        );
-                    } else {
-
-                        return prevCarrinho.filter(itemCarrinho =>
-                            itemCarrinho.id !== id || itemCarrinho.categoria !== categoria
-                        );
+                        return null; // será filtrado abaixo
                     }
                 }
 
-                return prevCarrinho;
+                return item;
+            }).filter(Boolean); // remove os nulls
+        });
+
+        Toast.fire({
+            icon: 'error',
+            title: 'ITEM REMOVIDO.',
+        });
+    };
+
+
+
+
+
+    const removerAdicionalDoItemCarrinho = (produtoId, adicionalId, adicionaisKey) => {
+        setItemCarrinho(prevCarrinho => {
+            return prevCarrinho.map(item => {
+                if (item.id !== produtoId) return item;
+                if ((item.adicionaisKey || '') !== (adicionaisKey || '')) return item; // só altera o item com a chave correta
+
+                if (!item.adicionais || item.adicionais.length === 0) return item;
+
+                const adicionalPresente = item.adicionais.find(adicional => adicional.id === adicionalId);
+
+                if (adicionalPresente) {
+                    let novosAdicionais;
+
+                    if (adicionalPresente.quantidade > 1) {
+                        novosAdicionais = item.adicionais.map(adicional =>
+                            adicional.id === adicionalId
+                                ? { ...adicional, quantidade: adicional.quantidade - 1 }
+                                : adicional
+                        );
+                    } else {
+                        novosAdicionais = item.adicionais.filter(adicional => adicional.id !== adicionalId);
+                    }
+
+                    const novosAdicionaisKey = novosAdicionais.length > 0
+                        ? novosAdicionais.map(a => `${a.id}-${a.quantidade}`).sort().join(',')
+                        : '';
+
+                    return {
+                        ...item,
+                        adicionais: novosAdicionais,
+                        adicionaisKey: novosAdicionaisKey,
+                    };
+                }
+
+                return item;
             });
-            Toast.fire({
-                icon: 'error',
-                title: 'ITEM REMOVIDO.',
-            })
-        }
-    }
+        });
+
+        Toast.fire({
+            icon: 'info',
+            title: 'Adicional removido.',
+        });
+    };
+
+
 
 
 
@@ -279,6 +297,7 @@ export const CarrinhoProvider = ({ children }) => {
             adcionarAdicionalCarrinho,
             adicionarSaborCarrinho,
             removerItemCarrinho,
+            removerAdicionalDoItemCarrinho,
 
             setSaborDataContext,
             setAdicionalDataContext,
