@@ -80,16 +80,35 @@
 }
 
 
-
-/* ITEM */
 .container-itemDrawer {
   width: 100%;
-  height: 4rem;
+  height: 3rem;
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+.container-itemDrawer-itemPrincipal {
+  width: 100%;
+  height: 1000px;
   background-color: #eee;
   display: flex;
   flex-direction: row;
-  margin-bottom: 1px;
+
 }
+
+.container-itemDrawer-itemSecundario {
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1px;
+  border-top: 1px solid #eee;
+  background-color: #eee;
+}
+
+
 
 .itemNome-itemDrawer {
   width: 40%;
@@ -97,11 +116,11 @@
   justify-content: flex-start;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   flex-wrap: wrap;
-  white-space: normal;
-  word-break: break-word;
+  justify-content: center;
+  align-items: center;
   font-size: 13px;
   padding: 5px;
-  
+
 }
 
 
@@ -109,8 +128,12 @@
   width: 25%;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
+  flex-direction: column;
   padding-top: 8px;
   justify-content: center;
+  align-items: center;
+
+  padding-bottom: 10px;
   font-size: 13px;
 }
 
@@ -145,7 +168,6 @@
   align-items: center;
   justify-content: center;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
-  /* preto bem suave */
 }
 
 
@@ -165,3 +187,4 @@
   font-size: 20px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
+

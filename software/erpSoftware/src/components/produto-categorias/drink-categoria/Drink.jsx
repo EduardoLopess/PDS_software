@@ -118,7 +118,7 @@ export const Drink = ({ produtos, numeroMesaPedido }) => {
                                 </div>
                                 <div className='conteudo-btn-item'>
                                     {numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
-                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                        <button onClick={() => tipoDrink(produto.id)}>
                                             <p>+</p>
                                         </button>
                                     ) : (

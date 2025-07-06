@@ -92,7 +92,7 @@ export const AlaminutaItem = ({ produtos, numeroMesaPedido }) => {
                 };
 
                 console.log("Item com adicionais múltiplos e quantidades:\n", JSON.stringify(item, null, 2));
-                // addToCarrinho(item)
+                adcionarAdicionalCarrinho(item)
             }
         });
     };

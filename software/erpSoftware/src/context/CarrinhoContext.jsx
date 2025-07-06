@@ -2,14 +2,14 @@ import { useSteps } from "@chakra-ui/react"
 import { createContext, useContext, useEffect, useState } from "react"
 import Swal from 'sweetalert2'
 import { usePedido } from "./PedidoContext"
+import { useApiProduto } from "./apiProdutoContext"
 
 const CarrinhoContext = createContext()
 
 export const CarrinhoProvider = ({ children }) => {
 
-
+    const { produtoData } = useApiProduto()
     const [carrinhoVisivel, setCarrinhoVisivel] = useState(false)
-    const [produtosDataContext, setProdutosDataContext] = useState([])
     const [saborDataContext, setSaborDataContext] = useState([])
     const [adicionalDataContext, setAdicionalDataContext] = useState([])
     const [itemCarrinho, setItemCarrinho] = useState([])
@@ -48,10 +48,10 @@ export const CarrinhoProvider = ({ children }) => {
 
 
     const adicionarItemCarrinho = (produtoId) => {
-        if (!Array.isArray(produtosDataContext) || produtosDataContext.length === 0)
+        if (!Array.isArray(produtoData) || produtoData.length === 0)
             return;
 
-        const produto = produtosDataContext.find(p => p.id === produtoId)
+        const produto = produtoData.find(p => p.id === produtoId)
 
         if (!produto) {
             return
@@ -106,13 +106,13 @@ export const CarrinhoProvider = ({ children }) => {
     }
 
     const adicionarSaborCarrinho = (idSabor, idDrink) => {
-    
-        const drink = produtosDataContext.find(p => p.id === idDrink)
+
+        const drink = produtoData.find(p => p.id === idDrink)
         const sabor = saborDataContext.find(s => s.id === idSabor)
 
         if (!drink || !sabor) {
-           
-            Toast.fire({ icon: 'error', title: 'Mesa inválida!', idDrink, idSabor});
+
+            Toast.fire({ icon: 'error', title: 'Mesa inválida!', idDrink, idSabor });
             return;
         }
 
@@ -168,9 +168,57 @@ export const CarrinhoProvider = ({ children }) => {
 
     }
 
-    const adcionarAdicionalCarrinho = (id) => {
-      
-    }
+    const adcionarAdicionalCarrinho = (item) => {
+        console.log("ITEM CONTEXT::\n", JSON.stringify(item, null, 2));
+
+        setItemCarrinho(prevCarrinho => {
+            // Cria um identificador único para esse conjunto de adicionais
+            const adicionaisKey = item.adicionais
+                .map(adc => `${adc.id}-${adc.quantidade}`)
+                .sort() // importante para garantir ordem previsível
+                .join(',');
+
+            // Verifica se já existe item igual no carrinho
+            const itemExistente = prevCarrinho.find(carrinhoItem => {
+                if (carrinhoItem.id !== item.produto.id) return false;
+                if (!carrinhoItem.adicionaisKey) return false;
+
+                return carrinhoItem.adicionaisKey === adicionaisKey;
+            });
+
+            if (itemExistente) {
+                // Se já existe, apenas incrementa a quantidade
+                return prevCarrinho.map(carrinhoItem =>
+                    carrinhoItem.id === item.produto.id && carrinhoItem.adicionaisKey === adicionaisKey
+                        ? { ...carrinhoItem, qtd: carrinhoItem.qtd + 1 }
+                        : carrinhoItem
+                );
+            } else {
+
+                const novoItem = {
+                    id: item.produto.id,
+                    nome: item.produto.nomeProduto,
+                    preco: item.produto.precoProdutoFormatado,
+                    tipo: item.produto.tipoProduto,
+                    adicionais: item.adicionais,
+                    adicionaisKey: adicionaisKey,
+                    qtd: 1
+                };
+                return [...prevCarrinho, novoItem];
+            }
+
+        });
+        Toast.fire({
+            icon: 'success',
+            title: 'Item salvo com sucesso!',
+            customClass: {
+                popup: 'mini-toast'
+            }
+        })
+
+
+    };
+
 
     const removerItemCarrinho = (id, categoria, idSabor) => {
         if (idSabor) {
@@ -231,7 +279,7 @@ export const CarrinhoProvider = ({ children }) => {
             adcionarAdicionalCarrinho,
             adicionarSaborCarrinho,
             removerItemCarrinho,
-            setProdutosDataContext,
+
             setSaborDataContext,
             setAdicionalDataContext,
             totalItens,

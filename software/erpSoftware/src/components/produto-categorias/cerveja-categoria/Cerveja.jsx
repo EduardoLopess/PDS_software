@@ -6,7 +6,9 @@ import { IoPencilOutline } from "react-icons/io5";
 
 
 
-export const CervejaItem = ({ produtos, numeroMesaPedido }) => {
+export const CervejaItem = ({ produtos, numero }) => {
+    console.log('numero prop:', numero)
+
     const { adicionarItemCarrinho } = useCarrinho()
     const { editarProduto } = useEditarProduto()
 
@@ -50,7 +52,7 @@ export const CervejaItem = ({ produtos, numeroMesaPedido }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    {numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
+                                    {numero !== '' && numero !== null ? (
                                         <button onClick={() => adicionarItemCarrinho(produto.id)}>
                                             <p>+</p>
                                         </button>

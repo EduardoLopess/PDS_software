@@ -22,6 +22,7 @@ import { useApiProduto } from '../../context/apiProdutoContext'
 export const ProdutoScreen = () => {
     const { produtoData } = useApiProduto();
     const { numeroMesaContext: numeroMesaPedido } = usePedido();
+    console.log("Mesa", numeroMesaPedido)
 
     const [tituloCategoria, setTituloCategoria] = useState('ESCOLHA UMA CATEGORIA');
     const [ativo, setAtivo] = useState('');
@@ -106,15 +107,15 @@ export const ProdutoScreen = () => {
                             produtos={filtrarProdutos('Pasteis')}
                         />}
                         {conteudoCategoria === 'cerveja' && <CervejaItem
-                            numeroMesaPedido={numeroMesaPedido}
+                            numero={numeroMesaPedido.numero}
                             produtos={filtrarProdutos('Cerveja')}
                         />}
                         {conteudoCategoria === 'drink' && <Drink
-                            numeroMesaPedido={numeroMesaPedido}
+                            numeroMesaPedido={numeroMesaPedido.numeroMesa}
                             produtos={filtrarProdutos('Drink')}
                         />}
                         {conteudoCategoria === 'porcao' && <PorcaoItem
-                            numeroMesaPedido={numeroMesaPedido}
+                            numeroMesaPedido={numeroMesaPedido.numeroMesa}
                             produtos={filtrarProdutos('Porcoes')}
                         />}
                         {conteudoCategoria === 'semAlcool' && <SemAlcoolItem
