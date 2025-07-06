@@ -2,7 +2,7 @@ export const ConverterCategoriaDecimal = (categoria) => {
     const map = {
         "Cervejas": 0,
         "Pasteis": 1,
-        "Porcao": 2,     // No enum é "Porcoes", mas no map "Porcao" (plural x singular). Ajuste se possível para manter coerência.
+        "Porcoes": 2,     // No enum é "Porcoes", mas no map "Porcao" (plural x singular). Ajuste se possível para manter coerência.
         "SemAlcool": 3,
         "Alaminuta": 4,
         "Drink": 5
@@ -12,7 +12,26 @@ export const ConverterCategoriaDecimal = (categoria) => {
 }
 
 export const ConverterTipoProdutoDecimal = (tipoProduto) => {
-   const map = {
+   const labelToEnumKey = {
+        "Long Neck": "LongNeck",
+        "Cerveja 600ml": "Cerveja600",
+        "Cerveja Latão": "CervejaLatao",
+        "Cerveja Litro": "CervejaLitro",
+        "Água sem gás": "AguaSemGaz",
+        "Água com gás": "AguaComGaz",
+        "Refrigerante Lata": "RefrigeranteLata",
+        "Refrigerante 600ml": "Refrigerante600",
+        "Suco": "Suco",
+        "Drink": "Drink",
+        "Caipirinha": "Caipirinha",
+        "Salgado": "Salgado",
+        "Doce": "Doce",
+        "Especial": "Especial",
+        "Sem Peixe": "SemPeixe",
+        "Peixe": "Peixe"
+    };
+
+    const enumMap = {
         "LongNeck": 0,
         "Cerveja600": 1,
         "CervejaLatao": 2,
@@ -29,7 +48,8 @@ export const ConverterTipoProdutoDecimal = (tipoProduto) => {
         "Especial": 13,
         "SemPeixe": 14,
         "Peixe": 15
-    }
+    };
 
-    return map[tipoProduto] ?? 0
+    const enumKey = labelToEnumKey[tipoProduto];
+    return enumMap[enumKey] ?? 0;
 }

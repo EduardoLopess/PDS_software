@@ -16,3 +16,8 @@ export const criarProduto = (produto) => {
 export const putProduto = (id, data) => {
   return axios.put(`${API}/${id}`, data)
 }
+
+//DELETAR
+export const deleteProduto = (id) => {
+  return axios.delete(`${API}/${id}`)
+}

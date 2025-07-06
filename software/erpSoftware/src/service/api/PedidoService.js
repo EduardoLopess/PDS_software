@@ -11,3 +11,6 @@ export const getPedidos = () => {
 export const postPedido = (pedido) => {
     return axios.post(API, pedido)
 }
+
+//deletar
+

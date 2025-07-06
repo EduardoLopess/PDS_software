@@ -1,9 +1,12 @@
 import { useCarrinho } from "../../../context/CarrinhoContext";
 import { FormatarTiposProdutos } from "../../../utils/FormatarTipos";
+import { IoPencilOutline } from "react-icons/io5";
+import { useEditarProduto } from "../hoock/EditarProduto";
 
 export const SemAlcoolItem = ({ produtos, numeroMesaPedido }) => {
 
     const { adicionarItemCarrinho } = useCarrinho()
+    const { editarProduto } = useEditarProduto()
 
     if (!Array.isArray(produtos)) {
         return null; // ou <p>Carregando...</p>
@@ -44,11 +47,16 @@ export const SemAlcoolItem = ({ produtos, numeroMesaPedido }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    {numeroMesaPedido != null && (
+                                    {numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
                                         <button onClick={() => adicionarItemCarrinho(produto.id)}>
                                             <p>+</p>
                                         </button>
+                                    ) : (
+                                        <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
+                                            <IoPencilOutline size={24} />
+                                        </button>
                                     )}
+
 
 
                                 </div>

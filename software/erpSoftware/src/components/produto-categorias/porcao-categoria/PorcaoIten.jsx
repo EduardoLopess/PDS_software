@@ -1,11 +1,11 @@
 import '../produto-categoria-style/Item-Categoria-Style.css';
-import { IoPencilOutline } from "react-icons/io5";
+import { IoPencilOutline } from "react-icons/io5";  
 import { useEditarProduto } from '../hoock/EditarProduto';
 import { useCarrinho } from '../../../context/CarrinhoContext';
 
 export const PorcaoItem = ({ produtos, numeroMesaPedido }) => {
 
-    const { adicionarItemCarrinho } = useCarrinho ()
+    const { adicionarItemCarrinho } = useCarrinho()
     const { editarProduto } = useEditarProduto()
 
 
@@ -49,7 +49,7 @@ export const PorcaoItem = ({ produtos, numeroMesaPedido }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    {numeroMesaPedido != null ? (
+                                    {numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
                                         <button onClick={() => adicionarItemCarrinho(produto.id)}>
                                             <p>+</p>
                                         </button>
@@ -58,6 +58,7 @@ export const PorcaoItem = ({ produtos, numeroMesaPedido }) => {
                                             <IoPencilOutline size={24} />
                                         </button>
                                     )}
+
                                 </div>
                             </div>
                         </div>

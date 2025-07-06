@@ -43,6 +43,9 @@ export const Carrinho = () => {
                 </div>
                 <div className="itemNome-itemDrawer">
                   <p>{item.nome}</p>
+                  {item.sabor && (
+                    <p style={{fontSize: 12, fontWeight: 'bold'}}>SABOR: {item.sabor}</p>
+                  )}
                 </div>
                 <div className="itemPreco-itemDrawer">
                   <p>R$: {item.preco}</p>
@@ -62,7 +65,7 @@ export const Carrinho = () => {
 
           <div className="container-total-drawer">
             {totalItens > 0 && (
-              <p>R$: {totalItens.toFixed(2)}</p>
+              <p>TOTAL - R$: {totalItens.toFixed(2)}</p>
             )}
 
           </div>

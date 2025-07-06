@@ -16,36 +16,20 @@ import { getProdutos } from '../../service/api/ProdutoService'
 import { Carrinho } from '../../components/carrinho/Carrinho'
 import { useCarrinho } from '../../context/CarrinhoContext'
 import { useLocation } from 'react-router-dom'
+import { usePedido } from '../../context/PedidoContext'
+import { useApiProduto } from '../../context/apiProdutoContext'
 
 export const ProdutoScreen = () => {
+    const { produtoData } = useApiProduto();
+    const { numeroMesaContext: numeroMesaPedido } = usePedido();
 
-    const location = useLocation()
-    const numeroMesaPedido = location.state?.numeroMesa
-    console.log("NUMERO MESA PEDIDO")
-
-    const [tituloCategoria, setTituloCategoria] = useState('ESCOLHA UMA CATEGORIA')
-    const [ativo, setAtivo] = useState('')
-    const [conteudoCategoria, setConteudoCategoria] = useState()
-    const [produtos, setProdutos] = useState([])
-    const { setProdutosDataContext } = useCarrinho()
-
-    useEffect(() => {
-        getProdutos()
-            .then(res => {
-                console.log('Resposta da API:', res.data);
-                setProdutos(res.data.data);
-                setProdutosDataContext(res.data.data)
-            })
-            .catch(err => console.error('Erro ao buscar produtos', err));
-    }, []);
-
+    const [tituloCategoria, setTituloCategoria] = useState('ESCOLHA UMA CATEGORIA');
+    const [ativo, setAtivo] = useState('');
+    const [conteudoCategoria, setConteudoCategoria] = useState();
 
     const filtrarProdutos = (categoria) => {
-        const resultado = produtos.filter(p => p.categoriaProduto?.toLowerCase() === categoria.toLowerCase());
-        console.log(`Filtrando categoria "${categoria}":`, resultado);
-        return resultado;
-    }
-
+        return produtoData.filter(p => p.categoriaProduto?.toLowerCase() === categoria.toLowerCase());
+    };
 
 
     return (

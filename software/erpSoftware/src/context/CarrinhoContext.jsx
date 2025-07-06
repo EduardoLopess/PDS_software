@@ -10,6 +10,8 @@ export const CarrinhoProvider = ({ children }) => {
 
     const [carrinhoVisivel, setCarrinhoVisivel] = useState(false)
     const [produtosDataContext, setProdutosDataContext] = useState([])
+    const [saborDataContext, setSaborDataContext] = useState([])
+    const [adicionalDataContext, setAdicionalDataContext] = useState([])
     const [itemCarrinho, setItemCarrinho] = useState([])
     const [totalItens, setTotalItens] = useState()
 
@@ -104,11 +106,70 @@ export const CarrinhoProvider = ({ children }) => {
     }
 
     const adicionarSaborCarrinho = (idSabor, idDrink) => {
+    
+        const drink = produtosDataContext.find(p => p.id === idDrink)
+        const sabor = saborDataContext.find(s => s.id === idSabor)
+
+        if (!drink || !sabor) {
+           
+            Toast.fire({ icon: 'error', title: 'Mesa inválida!', idDrink, idSabor});
+            return;
+        }
+
+
+        const drinkSabor = {
+            id: drink.id,
+            nome: drink.nomeProduto,
+            tipo: drink.tipoProduto,
+            preco: drink.precoProdutoFormatado,
+            sabor: sabor.nomeSabor,
+            idSabor: sabor.id
+        }
+
+        console.log("DRINK CONTEXT:\n", JSON.stringify(drinkSabor, null, 2))
+
+        setItemCarrinho(prevCarrinho => {
+            const itemPresente = prevCarrinho
+                .find(item => item.id === idDrink && item.idSabor === idSabor)
+
+            if (itemPresente) {
+                return prevCarrinho.map(drinkSabor =>
+                    drinkSabor.id === idDrink && drinkSabor.idSabor === idSabor
+                        ? { ...drinkSabor, qtd: itemPresente.qtd + 1 }
+                        : drinkSabor
+                )
+            } else {
+                const itemParaCarrinho = { ...drinkSabor, qtd: 1 }
+                return [...prevCarrinho, itemParaCarrinho]
+            }
+
+        })
+        Toast.fire({
+            icon: 'success',
+            title: 'Item salvo com sucesso!',
+            customClass: {
+                popup: 'mini-toast'
+            },
+            didOpen: () => {
+                const popup = document.querySelector('.mini-toast')
+                if (popup) {
+                    popup.style.width = '250px'
+                    popup.style.fontSize = '14px'
+                    popup.style.padding = '10px'
+                }
+
+                const progressBar = document.querySelector('.swal2-timer-progress-bar')
+                if (progressBar) {
+                    progressBar.style.backgroundColor = '#4caf50'
+                    progressBar.style.height = '4px'
+                }
+            }
+        })
 
     }
 
-    const adcionarAdicionalCarrinho = () => {
-
+    const adcionarAdicionalCarrinho = (id) => {
+      
     }
 
     const removerItemCarrinho = (id, categoria, idSabor) => {
@@ -171,6 +232,8 @@ export const CarrinhoProvider = ({ children }) => {
             adicionarSaborCarrinho,
             removerItemCarrinho,
             setProdutosDataContext,
+            setSaborDataContext,
+            setAdicionalDataContext,
             totalItens,
             setCarrinhoVisivel,
             setItemCarrinho

@@ -8,6 +8,7 @@ import { VendaScreen } from "./screens/venda-screen/Index";
 import { PedidoProvider } from "./context/PedidoContext";
 import { CarrinhoProvider } from "./context/CarrinhoContext";
 import { PedidoView } from "./screens/pedidos-screen/PedidoView";
+import { APIprodutoProvider } from "./context/apiProdutoContext";
 
 
 
@@ -17,18 +18,20 @@ function App() {
   return (
 
     <BrowserRouter>
-      <CarrinhoProvider>     
-        <PedidoProvider>     
-          <MenuNavegacao />
-          <Routes>
-            <Route path='/' element={<MesaScreen />} />
-            <Route path='/venda' element={<VendaScreen />} />
-            <Route path='/produtos' element={<ProdutoScreen />} />
-            <Route path='/pedidos' element={<PedidoView />} />
-            <Route path='/configuracao' element={<ConfiguracaoScreen />} />
-          </Routes>
-        </PedidoProvider>
-      </CarrinhoProvider>
+      <APIprodutoProvider>
+        <CarrinhoProvider>
+          <PedidoProvider>
+            <MenuNavegacao />
+            <Routes>
+              <Route path='/' element={<MesaScreen />} />
+              <Route path='/venda' element={<VendaScreen />} />
+              <Route path='/produtos' element={<ProdutoScreen />} />
+              <Route path='/pedidos' element={<PedidoView />} />
+              <Route path='/configuracao' element={<ConfiguracaoScreen />} />
+            </Routes>
+          </PedidoProvider>
+        </CarrinhoProvider>
+      </APIprodutoProvider>
     </BrowserRouter>
 
   )
