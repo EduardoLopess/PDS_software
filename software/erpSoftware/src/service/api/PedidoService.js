@@ -24,8 +24,32 @@ export const putPedido = async (id, pedido) => {
         return response.data;
     } catch (error) {
         console.error("Erro ao atualizar pedido:", error);
-        throw error; // Deixa o caller (quem chamou) lidar com o erro
+        throw error; 
     }
 };
+
+
+export const buscarPedidoPorMesa = async (mesaId) => {
+    try {
+        const response = await axios.get(`${API}/mesa/${mesaId}`);
+        return response.data; 
+    } catch (err) {
+        console.error("Erro ao buscar pedido por mesa:", err.response ? err.response.data : err.message);
+        throw err;
+    }
+};
+
+
 //deletar
+export const deletePedido = async (id) => {
+    try {
+        const response = await axios.delete(`${API}/${id}`)
+        return response.data
+
+    } catch (err) {
+        console.error("Falha ao deletar o pedido.", err.response ? err.response.data : err.message)
+        throw err
+
+    }
+}
 

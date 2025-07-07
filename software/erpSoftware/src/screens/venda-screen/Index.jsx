@@ -6,6 +6,8 @@ import { BtnPastelVenda } from '../../components/btn-categoria-venda/BtnPastelSc
 import { BtnPorcaoVenda } from '../../components/btn-categoria-venda/BtnPorcaoScreenVenda'
 import { BtnSemAlcoolVenda } from '../../components/btn-categoria-venda/BtnSemAlcoolScreenVenda'
 import './Venda-Screen-Style.css'
+import Swal from 'sweetalert2';
+
 import Modal from 'react-modal';
 import './Modal-Venda-Screen-Style.css'
 
@@ -18,13 +20,37 @@ import { Drink } from '../../components/produto-categorias/drink-categoria/Drink
 import { PorcaoItem } from '../../components/produto-categorias/porcao-categoria/PorcaoIten'
 import { SemAlcoolItem } from '../../components/produto-categorias/semAlcool-categoria/SemAlcoolItem'
 import { AlaminutaItem } from '../../components/produto-categorias/alaminuta-categoria/AlaminutaItem'
+import { CarrinhoVenda } from '../../components/carrinho/CarrinhoVenda'
+import { useCarrinhoVenda } from '../../context/CarrinhoVendaContext'
 
 export const VendaScreen = () => {
     const [tituloCategoria, setTituloCategoria] = useState('')
     const [ativo, setAtivo] = useState('')
     const [produtos, setProdutos] = useState([])
 
-    const [modalBtnMaisVisivel, setModalBtnMaisVisivel] = useState(false)
+    const { iniciarVenda, iniciarNovaVenda, cancelarVenda } = useCarrinhoVenda()
+
+    const [modalBtnMaisVisivel, setModalBtnMaisVisivel] = useState(false);
+    const [modalDivisaoVisivel, setModalDivisaoVisivel] = useState(false);
+
+    const fecharModalBtnMais = () => setModalBtnMaisVisivel(false);
+    const abrirModalBtnMais = () => setModalBtnMaisVisivel(true);
+
+    const fecharModalDivisao = () => setModalDivisaoVisivel(false); // NOVA FUNÇÃO
+    const abrirModalDivisao = () => setModalDivisaoVisivel(true);
+
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
 
     useEffect(() => {
         getProdutos()
@@ -40,8 +66,43 @@ export const VendaScreen = () => {
         return produtos.filter(p => p.categoriaProduto?.toLowerCase() === categoria.toLowerCase());
     }
 
-    const fecharModalBtnMais = () => setModalBtnMaisVisivel(false)
-    const abrirModalBtnMais = () => setModalBtnMaisVisivel(true)
+
+    const venda = () => {
+        Swal.fire({
+            title: 'Iniciar venda?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                iniciarNovaVenda()
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Venda iniciada'
+                });
+            }
+        });
+        return
+    }
+
+    const cancelar = () => {
+        Swal.fire({
+            title: 'Cancelar venda?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                cancelarVenda()
+            }
+        });
+        return
+    }
+
+            
+
+
+
 
     const renderModalBtnMais = () => (
         <Modal
@@ -104,17 +165,18 @@ export const VendaScreen = () => {
                     </div>
 
                     <div className='container-conteudoBtn-vendaScreen'>
-                        <div className='container-titulo-conteudoBtn'>
-                            <h2>{tituloCategoria}</h2>
-                        </div>
+
 
                         <div className=''>
-                            {ativo === 'pastel' && <PastelList produtos={filtrarProdutos('Pasteis')} />}
-                            {ativo === 'cerveja' && <CervejaItem produtos={filtrarProdutos('Cerveja')} />}
-                            {ativo === 'drink' && <Drink produtos={filtrarProdutos('Drink')} />}
-                            {ativo === 'porcao' && <PorcaoItem produtos={filtrarProdutos('Porcoes')} />}
-                            {ativo === 'semAlcool' && <SemAlcoolItem produtos={filtrarProdutos('SemAlcool')} />}
-                            {ativo === 'alaminuta' && <AlaminutaItem produtos={filtrarProdutos('Alaminuta')} />}
+                            <div className='container-titulo-conteudoBtn'>
+                                <h2>{tituloCategoria}</h2>
+                            </div>
+                            {ativo === 'pastel' && <PastelList iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Pasteis')} />}
+                            {ativo === 'cerveja' && <CervejaItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Cerveja')} />}
+                            {ativo === 'drink' && <Drink iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Drink')} />}
+                            {ativo === 'porcao' && <PorcaoItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Porcoes')} />}
+                            {ativo === 'semAlcool' && <SemAlcoolItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('SemAlcool')} />}
+                            {ativo === 'alaminuta' && <AlaminutaItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Alaminuta')} />}
                         </div>
                     </div>
                 </div>
@@ -127,14 +189,29 @@ export const VendaScreen = () => {
                         <h2>CARRINHO</h2>
                     </div>
                     <div className='container-conteudo-direita'>
+
+
+                        <div className='container-carrinhoVenda'>
+                            <CarrinhoVenda />
+                        </div>
+
+
                         <div className='container-btn-conteudo-direita'>
-                            <button className='btn-direita' style={{ background: '#E90000' }}>
-                                <p>CANCELAR VENDA</p>
-                            </button>
+                            {iniciarVenda ? (
+                                <button className='btn-direita' style={{ background: '#E90000' }} onClick={cancelar}>
+                                    <p>CANCELAR VENDA</p>
+                                </button>
+                            ) : (
+                                <button className='btn-direita' style={{ background: 'yellow' }} onClick={venda}>
+                                    <p>INICIAR VENDA</p>
+                                </button>
+
+                            )}
+
                             <button className='btn-direita' style={{ background: 'green' }}>
                                 <p>COBRAR</p>
                             </button>
-                            <button className='btn-direita' style={{ background: 'blue' }}>
+                            <button className='btn-direita' style={{ background: 'blue' }} onClick={abrirModalDivisao}>
                                 <p>DIVIDIR</p>
                             </button>
                             <button className='btn-direita' style={{ background: 'rgb(94, 93, 90)' }} onClick={abrirModalBtnMais}>

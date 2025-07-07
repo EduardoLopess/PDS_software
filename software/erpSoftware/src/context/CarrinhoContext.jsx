@@ -1,32 +1,54 @@
-import { useSteps } from "@chakra-ui/react"
 import { createContext, useContext, useEffect, useState } from "react"
 import Swal from 'sweetalert2'
-import { usePedido } from "./PedidoContext"
 import { useApiProduto } from "./apiProdutoContext"
+import { useCarrinhoVenda } from "./CarrinhoVendaContext" // Certifique-se de que está importado
 
 const CarrinhoContext = createContext()
 
 export const CarrinhoProvider = ({ children }) => {
 
     const { produtoData } = useApiProduto()
-    const [carrinhoVisivel, setCarrinhoVisivel] = useState(false)
+    // 1. Importe 'iniciarVenda' do useCarrinhoVenda para usar como condição
+    const { setPedidoAtivo, iniciarVenda } = useCarrinhoVenda() 
+
+    // 1. Carregar itemCarrinho do localStorage na inicialização
+    const [itemCarrinho, setItemCarrinhoState] = useState(() => {
+        try {
+            const localCarrinho = localStorage.getItem('carrinhoItens'); // Chave para o carrinho
+            return localCarrinho ? JSON.parse(localCarrinho) : [];
+        } catch (error) {
+            console.error("Falha ao carregar itemCarrinho do localStorage:", error);
+            return [];
+        }
+    });
+
+    const [carrinhoVisivel, setCarrinhoVisivelState] = useState(() => {
+        try {
+            const localVisivel = localStorage.getItem('carrinhoVisivel')
+            return localVisivel ? JSON.parse(localVisivel) : false;
+        } catch (error) {
+            console.error("Falha ao carregar carrinhoVisivel do localStorage:", error);
+            return false;
+        }
+    });
+
     const [saborDataContext, setSaborDataContext] = useState([])
     const [adicionalDataContext, setAdicionalDataContext] = useState([])
-    const [itemCarrinho, setItemCarrinho] = useState([])
-    const [totalItens, setTotalItens] = useState()
+    const [totalItens, setTotalItens] = useState(0)
 
-
+    // AQUI É ONDE VOCÊ FARÁ A ALTERAÇÃO
     useEffect(() => {
         if (itemCarrinho.length === 0) {
-            setCarrinhoVisivel(false);
+            setCarrinhoVisivelState(false);
             setTotalItens(0);
+            setPedidoAtivo(false); // Se não há itens, não há pedido ativo
             return;
         }
 
-        setCarrinhoVisivel(true);
+        setCarrinhoVisivelState(true); // Define a visibilidade do carrinho como verdadeira
 
         const total = itemCarrinho.reduce((acc, item) => {
-            const precoBase = Number(item.preco.replace(',', '.')) || 0;
+            const precoBase = Number(String(item.preco).replace(',', '.')) || 0;
             const precoAdicionais = (item.adicionais || []).reduce((soma, adicional) => {
                 const valor = Number(String(adicional.precoAdicional).replace(',', '.')) || 0;
                 return soma + valor * (adicional.quantidade || 1);
@@ -36,9 +58,23 @@ export const CarrinhoProvider = ({ children }) => {
         }, 0);
 
         setTotalItens(total);
+
+        // LÓGICA PARA setPedidoAtivo(true) AQUI
+        // Verifica se há itens no carrinho E se uma venda foi iniciada (implicando uma mesa ativa)
+        if (itemCarrinho.length > 0 && iniciarVenda) {
+            setPedidoAtivo(true);
+        } else {
+            setPedidoAtivo(false); // Caso contrário, se a venda não foi iniciada ou carrinho vazio
+        }
+    }, [itemCarrinho, iniciarVenda, setPedidoAtivo]); // Adicione iniciarVenda e setPedidoAtivo às dependências
+
+    useEffect(() => {
+        localStorage.setItem('carrinhoItens', JSON.stringify(itemCarrinho));
     }, [itemCarrinho]);
 
-
+    useEffect(() => {
+        localStorage.setItem('carrinhoVisivel', JSON.stringify(carrinhoVisivel));
+    }, [carrinhoVisivel]);
 
     const Toast = Swal.mixin({
         toast: false,
@@ -49,10 +85,10 @@ export const CarrinhoProvider = ({ children }) => {
         allowOutsideClick: false,
         allowEscapeKey: false,
         allowEnterKey: false,
-    })
+    });
 
-
-
+    const setItemCarrinho = (newState) => setItemCarrinhoState(newState);
+    const setCarrinhoVisivel = (newState) => setCarrinhoVisivelState(newState);
 
     const adicionarItemCarrinho = (produtoId) => {
         if (!Array.isArray(produtoData) || produtoData.length === 0)
@@ -63,7 +99,6 @@ export const CarrinhoProvider = ({ children }) => {
         if (!produto) return;
 
         setItemCarrinho(prevCarrinho => {
-            // Procurar somente item SEM adicionais
             const produtoPresente = prevCarrinho.find(
                 item => item.id === produtoId && (!item.adicionais || item.adicionais.length === 0)
             );
@@ -94,18 +129,14 @@ export const CarrinhoProvider = ({ children }) => {
         });
     };
 
-
     const adicionarSaborCarrinho = (idSabor, idDrink) => {
-
         const drink = produtoData.find(p => p.id === idDrink)
         const sabor = saborDataContext.find(s => s.id === idSabor)
 
         if (!drink || !sabor) {
-
             Toast.fire({ icon: 'error', title: 'Mesa inválida!', idDrink, idSabor });
             return;
         }
-
 
         const drinkSabor = {
             id: drink.id,
@@ -132,7 +163,6 @@ export const CarrinhoProvider = ({ children }) => {
                 const itemParaCarrinho = { ...drinkSabor, qtd: 1 }
                 return [...prevCarrinho, itemParaCarrinho]
             }
-
         })
         Toast.fire({
             icon: 'success',
@@ -155,7 +185,6 @@ export const CarrinhoProvider = ({ children }) => {
                 }
             }
         })
-
     }
 
     const adcionarAdicionalCarrinho = (item) => {
@@ -182,7 +211,6 @@ export const CarrinhoProvider = ({ children }) => {
                         : carrinhoItem
                 );
             } else {
-
                 const novoItem = {
                     id: item.produto.id,
                     nome: item.produto.nomeProduto,
@@ -194,7 +222,6 @@ export const CarrinhoProvider = ({ children }) => {
                 };
                 return [...prevCarrinho, novoItem];
             }
-
         });
         Toast.fire({
             icon: 'success',
@@ -202,44 +229,37 @@ export const CarrinhoProvider = ({ children }) => {
             customClass: {
                 popup: 'mini-toast'
             }
-        })
-
-
+        });
     };
-
 
     const removerItemCarrinho = (id, categoria, idSabor, adicionaisKey = '') => {
         setItemCarrinho(prevCarrinho => {
-            return prevCarrinho.map(item => {
-                const mesmoItemSemAdicionais = item.id === id &&
-                    item.categoria === categoria &&
-                    (item.adicionaisKey || '') === (adicionaisKey || '');
+            const updatedCarrinho = prevCarrinho.map(item => {
+                const isMatchingItem = item.id === id &&
+                    (item.categoria === categoria || item.tipo === categoria) && // Use categoria ou tipo para match
+                    (idSabor ? item.idSabor === idSabor : !item.idSabor) && // Match exato de sabor ou ausência de sabor
+                    (adicionaisKey ? item.adicionaisKey === adicionaisKey : !item.adicionaisKey); // Match exato de adicionais ou ausência de adicionais
 
-                const mesmoItemComSabor = idSabor &&
-                    item.id === id &&
-                    item.idSabor === idSabor;
-
-                if (mesmoItemSemAdicionais || mesmoItemComSabor) {
+                if (isMatchingItem) {
                     if (item.qtd > 1) {
                         return { ...item, qtd: item.qtd - 1 };
                     } else {
-                        return null; // será filtrado abaixo
+                        return null; // Será filtrado abaixo
                     }
                 }
-
                 return item;
             }).filter(Boolean); // remove os nulls
-        });
 
-        Toast.fire({
-            icon: 'error',
-            title: 'ITEM REMOVIDO.',
+            if (updatedCarrinho.length < prevCarrinho.length || 
+                (updatedCarrinho.length === prevCarrinho.length && updatedCarrinho.some((item, index) => item.qtd < prevCarrinho[index].qtd))) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'ITEM REMOVIDO.',
+                });
+            }
+            return updatedCarrinho;
         });
     };
-
-
-
-
 
     const removerAdicionalDoItemCarrinho = (produtoId, adicionalId, adicionaisKey) => {
         setItemCarrinho(prevCarrinho => {
@@ -285,10 +305,6 @@ export const CarrinhoProvider = ({ children }) => {
         });
     };
 
-
-
-
-
     return (
         <CarrinhoContext.Provider value={{
             carrinhoVisivel,
@@ -298,7 +314,6 @@ export const CarrinhoProvider = ({ children }) => {
             adicionarSaborCarrinho,
             removerItemCarrinho,
             removerAdicionalDoItemCarrinho,
-
             setSaborDataContext,
             setAdicionalDataContext,
             totalItens,

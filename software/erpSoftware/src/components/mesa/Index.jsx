@@ -5,11 +5,11 @@ import { usePedido } from '../../context/PedidoContext'
 
 export const Mesa = ({ id, numeroMesa, statusMesa }) => {
 
-    const { iniciarPedido } = usePedido()
+    const { iniciarPedido, buscarMesaPedido } = usePedido()
 
 
 
-    const iniciar = () => {
+    const iniciar = (idMesa) => {
         if (statusMesa) {
             Swal.fire({
                 title: 'Mesa ocupada, deseja editar o pedido?',
@@ -18,7 +18,7 @@ export const Mesa = ({ id, numeroMesa, statusMesa }) => {
                 cancelButtonText: 'Não'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log('Iniciar edição');
+                   buscarMesaPedido(idMesa) 
                 }
             });
         } else {
@@ -42,7 +42,7 @@ export const Mesa = ({ id, numeroMesa, statusMesa }) => {
 
 
     return (
-        <button style={{ all: 'unset', cursor: 'pointer' }} onClick={iniciar}>
+        <button style={{ all: 'unset', cursor: 'pointer' }} onClick={() => iniciar(id)}>
             <div className='cardMesa'>
                 <div className='cardNumeroMesa'>
                     <p>MESA {numeroMesa}</p>

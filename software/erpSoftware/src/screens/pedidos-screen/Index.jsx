@@ -5,13 +5,14 @@ import Swal from 'sweetalert2';
 
 import { useState } from 'react'
 import { usePedido } from '../../context/PedidoContext'
+import { PedidoDetalhe } from './PedidoDetalhe';
 
 export const PedidoScreen = ({ pedidos }) => {
 
     const navigate = useNavigate()
     const [pedidoNumeroMesa, setPedidoNumeroMesa] = useState('')
     const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
-    const { editarPedido } = usePedido()
+    const { editarPedido, deletarPedido } = usePedido()
 
     const iniciarEdicao = (id) => {
 
@@ -77,6 +78,15 @@ export const PedidoScreen = ({ pedidos }) => {
                     </div>
                     <div className='container-conteudo-pedidoScreen'>
                         {pedidoSelecionado ? (
+                            <PedidoDetalhe
+                                pedidoSelecionado={pedidoSelecionado}
+                            />
+                        ) : (
+                            <p>sdasdsa</p>
+                        )}
+
+
+                        {/* {pedidoSelecionado ? (
                             <>
                                 {pedidoSelecionado.itens.map((item, index) => (
                                     <div className='container-item'>
@@ -90,7 +100,7 @@ export const PedidoScreen = ({ pedidos }) => {
                                             {item.saborDrink && (
                                                 <p><strong>Sabor:</strong> {item.saborDrink.nomeSabor}</p>
                                             )}
-                                            {/* {item.adicionais?.length > 0 && (
+                                            {item.adicionais?.length > 0 && (
                                                 <div>
                                                     <strong>Adicionais:</strong>
                                                     <ul>
@@ -101,7 +111,7 @@ export const PedidoScreen = ({ pedidos }) => {
                                                         ))}
                                                     </ul>
                                                 </div>
-                                            )} */}
+                                            )}
                                         </div>
                                         <div className='linha-pedidoDetalhe' />
                                         <div className='qtdProduto-pedidoDetalhe'>
@@ -133,7 +143,7 @@ export const PedidoScreen = ({ pedidos }) => {
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 20, fontSize: 20 }}>
                                 <p>Selecione um pedido!</p>
                             </div>
-                        )}
+                        )} */}
                     </div>
 
 
@@ -141,7 +151,7 @@ export const PedidoScreen = ({ pedidos }) => {
                     <div className='container-buttons-pedidoScreen'>
                         <button className='buttom-container-detalhes' style={{ background: 'red' }} onClick={() => {
                             if (pedidoSelecionado) {
-                                iniciarEdicao(pedidoSelecionado.id);
+                                deletarPedido(pedidoSelecionado.id);
                             } else {
                                 Swal.fire({
                                     icon: 'warning',

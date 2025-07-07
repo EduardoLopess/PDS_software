@@ -5,14 +5,16 @@ import { getSabor } from '../../../service/api/SaborService'
 import { useCarrinho } from '../../../context/CarrinhoContext';
 import Swal from 'sweetalert2'
 import { IoPencilOutline } from "react-icons/io5";
+import { useCarrinhoVenda } from '../../../context/CarrinhoVendaContext';
 
 
 
-export const Drink = ({ produtos, numeroMesaPedido }) => {
+export const Drink = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
 
     const { setSaborDataContext, adicionarSaborCarrinho, adicionarItemCarrinho } = useCarrinho()
     const [saborData, setSaborData] = useState([])
-
+    
+    const {adicionarDrinkSaborCarrinhoVenda , adicionarItemCarrinhoVenda, setSaboDrinkContext} = useCarrinhoVenda()
 
 
     useEffect(() => {
@@ -21,6 +23,7 @@ export const Drink = ({ produtos, numeroMesaPedido }) => {
                 console.log("Respota api SABOR: ", res.data)
                 setSaborData(res.data.data)
                 setSaborDataContext(res.data.data)
+                setSaboDrinkContext(res.data.data)
             })
             .catch(err => console.error("Erro ao buscar sabores.", err))
     }, [])
@@ -35,8 +38,11 @@ export const Drink = ({ produtos, numeroMesaPedido }) => {
         }
 
         if (drink.tipoProduto === 'Caipirinha') {
-            alert('É CAIPIRINHA');
             abrirModalEscolhaSabor(saborData, idDrink)
+            alert("E CAIPIRA")
+        } else if (iniciarVenda === true) {
+            adicionarItemCarrinhoVenda(idDrink)
+            
         } else {
             adicionarItemCarrinho(idDrink)
         }
@@ -69,7 +75,11 @@ export const Drink = ({ produtos, numeroMesaPedido }) => {
                     return false
                 } else {
                     const sabor = saborData.find(s => String(s.id) === String(selectedId))
-                    return adicionarSaborCarrinho(sabor.id, idDrinkState)
+                    if (iniciarVenda === true) {
+                        return adicionarDrinkSaborCarrinhoVenda(sabor.id, idDrinkState)
+                    } else {
+                        return adicionarSaborCarrinho(sabor.id, idDrinkState)
+                    }
                 }
 
             }
@@ -116,15 +126,21 @@ export const Drink = ({ produtos, numeroMesaPedido }) => {
                                 <div className='conteudo-disponivel-item'>
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
-                                <div className='conteudo-btn-item'>
-                                    {numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
+                               <div className='conteudo-btn-item'>
+                                    {iniciarVenda ? ( // SE iniciarVenda for TRUE (Modo de Venda)
                                         <button onClick={() => tipoDrink(produto.id)}>
-                                            <p>+</p>
+                                            <p>ESSE</p>
                                         </button>
-                                    ) : (
-                                        <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
-                                            <IoPencilOutline size={24} />
-                                        </button>
+                                    ) : ( 
+                                        (numeroMesaPedido !== '' && numeroMesaPedido !== null) ? ( // SE tem numeroMesaPedido (Modo Pedido Existente)
+                                            <button onClick={() => tipoDrink(produto.id)}>
+                                                <p>+</p>
+                                            </button>
+                                        ) : ( 
+                                            <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
+                                                <IoPencilOutline size={24} />
+                                            </button>
+                                        )
                                     )}
 
                                 </div>

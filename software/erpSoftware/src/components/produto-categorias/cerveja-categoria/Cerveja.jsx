@@ -1,20 +1,19 @@
 import { useCarrinho } from '../../../context/CarrinhoContext';
+import { useCarrinhoVenda } from '../../../context/CarrinhoVendaContext';
 import { FormatarTiposProdutos } from '../../../utils/FormatarTipos';
 import { useEditarProduto } from '../hoock/EditarProduto';
 import '../produto-categoria-style/Item-Categoria-Style.css'
 import { IoPencilOutline } from "react-icons/io5";
 
 
+export const CervejaItem = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
 
-export const CervejaItem = ({ produtos, numero }) => {
-    console.log('numero prop:', numero)
-
+    const {adicionarItemCarrinhoVenda} = useCarrinhoVenda()
     const { adicionarItemCarrinho } = useCarrinho()
     const { editarProduto } = useEditarProduto()
 
-
     if (!Array.isArray(produtos)) {
-        return null; // ou <p>Carregando...</p>
+        return null;
     }
 
     if (produtos.length === 0) {
@@ -52,14 +51,20 @@ export const CervejaItem = ({ produtos, numero }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    {numero !== '' && numero !== null ? (
-                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
-                                            <p>+</p>
+                                    {iniciarVenda ? ( // SE iniciarVenda for TRUE (Modo de Venda)
+                                        <button onClick={() => adicionarItemCarrinhoVenda(produto.id)}>
+                                            <p>ESSE</p>
                                         </button>
-                                    ) : (
-                                        <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
-                                            <IoPencilOutline size={24} />
-                                        </button>
+                                    ) : ( 
+                                        (numeroMesaPedido !== '' && numeroMesaPedido !== null) ? ( // SE tem numeroMesaPedido (Modo Pedido Existente)
+                                            <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                                <p>+</p>
+                                            </button>
+                                        ) : ( 
+                                            <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
+                                                <IoPencilOutline size={24} />
+                                            </button>
+                                        )
                                     )}
 
                                 </div>
@@ -70,5 +75,4 @@ export const CervejaItem = ({ produtos, numero }) => {
             ))}
         </div>
     );
-
 }

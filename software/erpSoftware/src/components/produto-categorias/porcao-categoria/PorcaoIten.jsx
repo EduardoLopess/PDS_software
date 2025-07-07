@@ -1,12 +1,14 @@
 import '../produto-categoria-style/Item-Categoria-Style.css';
-import { IoPencilOutline } from "react-icons/io5";  
+import { IoPencilOutline } from "react-icons/io5";
 import { useEditarProduto } from '../hoock/EditarProduto';
 import { useCarrinho } from '../../../context/CarrinhoContext';
+import { useCarrinhoVenda } from '../../../context/CarrinhoVendaContext';
 
-export const PorcaoItem = ({ produtos, numeroMesaPedido }) => {
+export const PorcaoItem = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
 
     const { adicionarItemCarrinho } = useCarrinho()
     const { editarProduto } = useEditarProduto()
+    const { adicionarItemCarrinhoVenda} = useCarrinhoVenda()
 
 
     if (!Array.isArray(produtos)) {
@@ -49,14 +51,20 @@ export const PorcaoItem = ({ produtos, numeroMesaPedido }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    {numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
-                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
-                                            <p>+</p>
+                                    {iniciarVenda ? ( // SE iniciarVenda for TRUE (Modo de Venda)
+                                        <button onClick={() => adicionarItemCarrinhoVenda(produto.id)}>
+                                            <p>ESSE</p>
                                         </button>
                                     ) : (
-                                        <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
-                                            <IoPencilOutline size={24} />
-                                        </button>
+                                        (numeroMesaPedido !== '' && numeroMesaPedido !== null) ? ( // SE tem numeroMesaPedido (Modo Pedido Existente)
+                                            <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                                <p>+</p>
+                                            </button>
+                                        ) : (
+                                            <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
+                                                <IoPencilOutline size={24} />
+                                            </button>
+                                        )
                                     )}
 
                                 </div>

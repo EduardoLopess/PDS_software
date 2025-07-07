@@ -3,11 +3,13 @@ import Swal from 'sweetalert2'
 import { IoPencilOutline } from "react-icons/io5";
 import { getAdicionais } from "../../../service/api/AdicionalService";
 import { useCarrinho } from "../../../context/CarrinhoContext";
+import { useCarrinhoVenda } from "../../../context/CarrinhoVendaContext";
 
-export const AlaminutaItem = ({ produtos, numeroMesaPedido }) => {
+export const AlaminutaItem = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
 
     const { adcionarAdicionalCarrinho, adicionarItemCarrinho, setAdicionalDataContext } = useCarrinho()
     const [adicionalData, setAdicionalData] = useState()
+    const {adicionarItemCarrinhoVenda , adicionarAdicionalCarrinhoVenda} = useCarrinhoVenda()
 
     useEffect(() => {
         getAdicionais()
@@ -33,8 +35,10 @@ export const AlaminutaItem = ({ produtos, numeroMesaPedido }) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 abrirModalAdicional(adicionalData, idProduto)
+            } else if (iniciarVenda === true){
+              adicionarItemCarrinhoVenda(idProduto)
             } else {
-                adicionarItemCarrinho(idProduto)
+                  adicionarItemCarrinho(idProduto)
             }
         });
     };
@@ -91,8 +95,12 @@ export const AlaminutaItem = ({ produtos, numeroMesaPedido }) => {
                     adicionais: result.value
                 };
 
-                console.log("Item com adicionais múltiplos e quantidades:\n", JSON.stringify(item, null, 2));
-                adcionarAdicionalCarrinho(item)
+                if (iniciarVenda === true) {
+                    return adicionarAdicionalCarrinhoVenda(item)
+                } else {
+                    return adcionarAdicionalCarrinho(item)
+                }
+
             }
         });
     };
@@ -137,14 +145,20 @@ export const AlaminutaItem = ({ produtos, numeroMesaPedido }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    {numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
+                                    {iniciarVenda ? ( // SE iniciarVenda for TRUE (Modo de Venda)
                                         <button onClick={() => addAdicional(produto.id)}>
-                                            <p>+</p>
+                                            <p>ESSE</p>
                                         </button>
                                     ) : (
-                                        <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
-                                            <IoPencilOutline size={24} />
-                                        </button>
+                                        (numeroMesaPedido !== '' && numeroMesaPedido !== null) ? ( // SE tem numeroMesaPedido (Modo Pedido Existente)
+                                            <button onClick={() => addAdicional(produto.id)}>
+                                                <p>+</p>
+                                            </button>
+                                        ) : (
+                                            <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
+                                                <IoPencilOutline size={24} />
+                                            </button>
+                                        )
                                     )}
 
                                 </div>

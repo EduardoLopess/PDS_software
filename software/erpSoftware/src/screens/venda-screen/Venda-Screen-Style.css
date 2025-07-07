@@ -8,6 +8,12 @@
     display: flex;
 }
 
+.container-carrinhoVenda {
+    width: 100%;
+    height: 100%;
+    
+}
+
 .container-esquerda-vendaScreen {
     width: 50%;
     height: 100%;
@@ -28,14 +34,65 @@
 
 .container-conteudo-direita {
     margin: 1rem;
-    height: 90%;
+    height: 90%; /* A altura total disponível para esta seção */
     width: 95%;
     border-radius: 15px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     background-color: white;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
-    position: relative;
+    /* Remova position: relative; se você não tiver outros elementos absolutizados que dependam disso
+       e preferir que .container-btn-conteudo-direita não seja absolute.
+       No entanto, se mantiver o container-btn-conteudo-direita como absolute, mantenha o relative aqui.
+       Vou manter 'relative' para o container-btn-conteudo-direita se comportar como antes. */
+    position: relative; /* Mantenha se o container-btn-conteudo-direita for absolute */
+
+    /* **MUITO IMPORTANTE AQUI:** */
+    display: flex;
+    flex-direction: column; /* Organiza os filhos em coluna: Carrinho e depois os Botões */
+    /* Remova justify-content: space-between; se você tinha. */
+    /* O espaço será gerenciado pela altura do CarrinhoVenda e dos botões */
+}
+
+/* O container dos botões de ação na parte inferior da tela de venda */
+.container-btn-conteudo-direita {
+    width: 100%;
+    height: 3.5rem; /* **Altura fixa dos botões de ação** */
+    /* Já que você quer eles por cima, eles NÃO PODEM ser position: absolute aqui.
+       Eles devem fazer parte do fluxo do Flexbox. */
+    /* REMOVA: position: absolute; */
+    /* REMOVA: bottom: 0; */
+    /* REMOVA: left: 0; */
+    display: flex; /* Mantenha display: flex */
+    justify-content: space-between;
+    background-color: white; /* Garante que os botões tenham um fundo */
+    box-shadow: 0px -2px 5px rgba(0,0,0,0.1); /* Sutil sombra para dar profundidade */
+    z-index: 20; /* Certifique-se de que ele esteja acima de qualquer coisa que possa vazar */
+
+    /* Adicione margin-top para um pequeno espaçamento entre o carrinho e os botões, se desejar */
+    /* margin-top: 0.5rem; */
+}
+
+/* O contêiner onde o componente CarrinhoVenda é renderizado */
+.container-carrinhoVenda {
+    width: 100%;
+    /* Remova height: 100%; que estava aqui antes. */
+    background-color: transparent; /* A cor de fundo será definida dentro do CarrinhoVenda-wrapper */
+    display: flex;
+    flex-direction: column;
+    /* REMOVA position: relative; daqui se o totalItem-carrinhoVenda estiver DENTRO do componente CarrinhoVenda */
+
+    /* **NOVO:** Faça o container do carrinho ocupar todo o espaço restante */
+    flex-grow: 1; /* Permite que ele cresça e ocupe o espaço restante na coluna */
+
+    /* Remova quaisquer paddings ou margens que você adicionou aqui antes */
+    /* padding-bottom: 7rem; <-- REMOVER */
+    /* margin-bottom: 3.5rem; <-- REMOVER */
+
+    /* O overflow e as barras de rolagem NÃO FICAM AQUI, mas sim DENTRO do componente CarrinhoVenda */
+    /* overflow-y: auto; <-- REMOVER */
+    /* scrollbar-width: thin; <-- REMOVER */
+    /* etc. <-- REMOVER */
 }
 
 .container-btn-categorias-vendaScreen {
@@ -96,16 +153,40 @@
 
 
 .container-conteudoBtn-vendaScreen {
-    background-color: white;
+   background-color: white;
     width: 95%;
-    height: 50vh;
+    height: 50vh; /* Esta altura fixa é crucial para que o scroll funcione */
     border-radius: 20px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
-
-
+    overflow-y: auto; 
+    scrollbar-width: thin; /* Para Firefox: torna a barra de rolagem fina */
+    scrollbar-color: rgba(128, 128, 128, 0.3) transparent; /* Para Firefox: cor do 'thumb' e 'track' */
+    
 }
-
+.container-titulo-conteudoBtn {
+    width: 100%;
+}
 
 .container-itens-categoria-vendaScreen {
     width: 100%;
+}
+
+.container-carrinhoVenda {
+    width: 100%;
+    /* REMOVA height: 100%; */
+    /* height: 100%; */ /* <-- Remova esta linha */
+    background-color: white;
+    display: flex;
+    /* REMOVA position: relative; se ele não precisar de filhos absolutizados diretamente dentro dele */
+    position: relative; /* Mantenha se o total do carrinho ainda é absolute dentro de container-carrinhoVenda */
+    flex-direction: column;
+    overflow-y: auto; /* Mantenha o scroll aqui para os ITENS do carrinho */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, 0.3) transparent;
+
+    /* ADICIONE ESTA PROPRIEDADE PARA FAZER O CARRINHO OCUPAR O ESPAÇO DISPONÍVEL */
+    flex-grow: 1; /* Permite que o carrinho cresça e ocupe o espaço disponível */
+    margin-bottom: 3.5rem; /* OU use padding-bottom para criar espaço para os botões fixos */
+    /* Uma alternativa a margin-bottom é definir o bottom do totalItem-carrinhoVenda com a altura dos botões */
+    /* OU podemos ajustar o container-carrinhoVenda para não sobrepor o container-btn-conteudo-direita */
 }

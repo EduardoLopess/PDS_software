@@ -1,0 +1,135 @@
+/* PedidoDetalhes-Styles.css */
+
+.containerItem-pedidoDetalhes {
+    margin-top: 10px;
+    width: 100%;
+    background-color: #eee;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+/* Base para todas as células da linha principal */
+.tipoItem-pedidoDetalhe,
+.nomeItem-pedidoDetalhe,
+.precoItem-pedidoDetalhe,
+.qtd-toggle-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    padding: 8px;
+    box-sizing: border-box;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustes específicos de largura para cada seção na linha principal */
+.tipoItem-pedidoDetalhe {
+    width: 15%;
+}
+
+.nomeItem-pedidoDetalhe {
+    width: 35%;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.precoItem-pedidoDetalhe {
+    width: 20%;
+    justify-content: center;
+}
+
+/* Grupo de QTD e Toggle */
+.qtd-toggle-group {
+    width: 30%;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-right: none;
+}
+
+.qtdItem-pedidoDetalhe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-right: none;
+    width: auto;
+}
+
+/* --- Botão de Toggle --- */
+.toggle-adicionais-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    min-width: 80px;
+}
+
+.toggle-adicionais-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* --- Seção de Adicionais Expansível --- */
+.adicionais-section-expandable {
+    width: 100%;
+    border-top: 1px dashed #ccc;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+
+    /* REMOVA OU COMENTE ESTAS LINHAS ABAIXO */
+    /* max-height: 0; */
+    /* opacity: 0; */
+    /* overflow: hidden; */
+
+    /* Adicione estas propriedades para que o conteúdo seja visível ao ser renderizado */
+    max-height: 200px; /* Um valor alto o suficiente para qualquer conteúdo */
+    opacity: 1;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out; /* Mantenha a transição para suavizar a aparição */
+}
+
+
+.adicionais-list {
+    font-size: 0.9em;
+    color: #444;
+    line-height: 1.4;
+    margin: 0;
+    padding: 5px 0;
+}
+
+.containerAdc-pedidoDetalhe {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+}
+
+.nomeAdc-pedidoDetalhe {
+    width: 50%;
+    margin: 2px;
+    height: auto;
+    
+}
+
+.precoAdc-pedidoDetalhe {
+    width: 50%;
+    height: auto;
+}

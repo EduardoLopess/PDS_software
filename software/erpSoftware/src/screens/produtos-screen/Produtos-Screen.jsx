@@ -32,7 +32,6 @@ export const ProdutoScreen = () => {
         return produtoData.filter(p => p.categoriaProduto?.toLowerCase() === categoria.toLowerCase());
     };
 
-
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
             <div className="container-produtosScreen">
@@ -92,7 +91,6 @@ export const ProdutoScreen = () => {
                     </div>
                 </div>
 
-
                 <div className='linha' />
 
                 {/* COLUNA DIREITA - CONTEÚDO */}
@@ -103,36 +101,33 @@ export const ProdutoScreen = () => {
                     </div>
                     <div className='containerConteudo-produtoScreen'>
                         {conteudoCategoria === 'pastel' && <PastelList
-                            numeroMesaPedido={numeroMesaPedido}
+                            numeroMesaPedido={numeroMesaPedido} // Já está correto
                             produtos={filtrarProdutos('Pasteis')}
                         />}
                         {conteudoCategoria === 'cerveja' && <CervejaItem
-                            numero={numeroMesaPedido.numero}
+                            numeroMesaPedido={numeroMesaPedido} // Passa o objeto completo
                             produtos={filtrarProdutos('Cerveja')}
                         />}
                         {conteudoCategoria === 'drink' && <Drink
-                            numeroMesaPedido={numeroMesaPedido.numeroMesa}
+                            numeroMesaPedido={numeroMesaPedido} // Passa o objeto completo
                             produtos={filtrarProdutos('Drink')}
                         />}
                         {conteudoCategoria === 'porcao' && <PorcaoItem
-                            numeroMesaPedido={numeroMesaPedido.numeroMesa}
+                            numeroMesaPedido={numeroMesaPedido} // Passa o objeto completo
                             produtos={filtrarProdutos('Porcoes')}
                         />}
                         {conteudoCategoria === 'semAlcool' && <SemAlcoolItem
-                            numeroMesaPedido={numeroMesaPedido}
+                            numeroMesaPedido={numeroMesaPedido} // Já está correto
                             produtos={filtrarProdutos('SemAlcool')}
                         />}
                         {conteudoCategoria === 'alaminuta' && <AlaminutaItem
-                            numeroMesaPedido={numeroMesaPedido}
-                            produtos={filtrarProdutos('Alaminuta')
-
-                            }
+                            numeroMesaPedido={numeroMesaPedido} // Já está correto
+                            produtos={filtrarProdutos('Alaminuta')}
                         />}
                     </div>
                 </div>
 
             </div>
         </div>
-
     )
 }
