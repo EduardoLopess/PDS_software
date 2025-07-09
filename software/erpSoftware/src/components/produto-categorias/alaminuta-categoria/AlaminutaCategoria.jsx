@@ -4,6 +4,8 @@ import alaminuta from '../../../assets/alaminuta.png'
 
 export const AlaMinutaCategoria = ({ativo, setTituloCategoria, onClick}) => {
     
+    
+
     const handleClick = () => {
         setTituloCategoria("À ALA MINUTA")
         if (onClick) onClick()

@@ -2,16 +2,15 @@ import { createContext, useContext, useEffect, useState } from "react"
 import Swal from 'sweetalert2'
 import { useApiProduto } from "./apiProdutoContext"
 import { useCarrinhoVenda } from "./CarrinhoVendaContext" // Certifique-se de que está importado
+import { nanoid } from "nanoid";
 
 const CarrinhoContext = createContext()
 
 export const CarrinhoProvider = ({ children }) => {
 
     const { produtoData } = useApiProduto()
-    // 1. Importe 'iniciarVenda' do useCarrinhoVenda para usar como condição
-    const { setPedidoAtivo, iniciarVenda } = useCarrinhoVenda() 
+    const { setPedidoAtivo, iniciarVenda } = useCarrinhoVenda()
 
-    // 1. Carregar itemCarrinho do localStorage na inicialização
     const [itemCarrinho, setItemCarrinhoState] = useState(() => {
         try {
             const localCarrinho = localStorage.getItem('carrinhoItens'); // Chave para o carrinho
@@ -111,6 +110,7 @@ export const CarrinhoProvider = ({ children }) => {
                 );
             } else {
                 return [...prevCarrinho, {
+                    idUnico: nanoid(8),
                     id: produto.id,
                     nome: produto.nomeProduto,
                     preco: produto.precoProdutoFormatado,
@@ -139,6 +139,7 @@ export const CarrinhoProvider = ({ children }) => {
         }
 
         const drinkSabor = {
+            idUnico: nanoid(8),
             id: drink.id,
             nome: drink.nomeProduto,
             tipo: drink.tipoProduto,
@@ -212,6 +213,7 @@ export const CarrinhoProvider = ({ children }) => {
                 );
             } else {
                 const novoItem = {
+                    idUnico: nanoid(8),
                     id: item.produto.id,
                     nome: item.produto.nomeProduto,
                     preco: item.produto.precoProdutoFormatado,
@@ -232,34 +234,28 @@ export const CarrinhoProvider = ({ children }) => {
         });
     };
 
-    const removerItemCarrinho = (id, categoria, idSabor, adicionaisKey = '') => {
+    const removerItemCarrinho = (idUnico) => {
         setItemCarrinho(prevCarrinho => {
             const updatedCarrinho = prevCarrinho.map(item => {
-                const isMatchingItem = item.id === id &&
-                    (item.categoria === categoria || item.tipo === categoria) && // Use categoria ou tipo para match
-                    (idSabor ? item.idSabor === idSabor : !item.idSabor) && // Match exato de sabor ou ausência de sabor
-                    (adicionaisKey ? item.adicionaisKey === adicionaisKey : !item.adicionaisKey); // Match exato de adicionais ou ausência de adicionais
+                if (item.idUnico !== idUnico) return item;
 
-                if (isMatchingItem) {
-                    if (item.qtd > 1) {
-                        return { ...item, qtd: item.qtd - 1 };
-                    } else {
-                        return null; // Será filtrado abaixo
-                    }
+                if (item.qtd > 1) {
+                    return { ...item, qtd: item.qtd - 1 };
+                } else {
+                    return null;
                 }
-                return item;
-            }).filter(Boolean); // remove os nulls
+            }).filter(Boolean);
 
-            if (updatedCarrinho.length < prevCarrinho.length || 
-                (updatedCarrinho.length === prevCarrinho.length && updatedCarrinho.some((item, index) => item.qtd < prevCarrinho[index].qtd))) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'ITEM REMOVIDO.',
-                });
-            }
+            Toast.fire({
+                icon: 'error',
+                title: 'ITEM REMOVIDO.',
+            });
+
             return updatedCarrinho;
         });
     };
+
+
 
     const removerAdicionalDoItemCarrinho = (produtoId, adicionalId, adicionaisKey) => {
         setItemCarrinho(prevCarrinho => {

@@ -37,9 +37,9 @@ export const Carrinho = () => {
         <div className="conteudo-carrinho">
           {itemCarrinho.length > 0 ? (
             itemCarrinho.map((item) => {
-              const itemKey = item.adicionaisKey || `${item.id}-${item.idSabor || 'semSabor'}`
+              
               return (
-                <div key={itemKey} className="container-itemDrawer">
+                <div key={item.idUnico} className="container-itemDrawer">
                   <div className="container-itemDrawer-itemPrincipal">
                     <div className="itemTipoProduto-itemDrawer">
                       <p>{FormatarTiposProdutosCarrinho(item.tipo)}</p>
@@ -60,10 +60,7 @@ export const Carrinho = () => {
                       <button
                         onClick={() =>
                           removerItemCarrinho(
-                            item.id,
-                            item.categoria,
-                            item.idSabor,
-                            item.adicionaisKey || ''
+                           item.idUnico
                           )
                         }
                       >
@@ -76,14 +73,14 @@ export const Carrinho = () => {
                     <div className="adicionais-toggle-container">
                       <button
                         className="adicionais-toggle-btn"
-                        onClick={() => toggleAdicionais(itemKey)}
+                        onClick={() => toggleAdicionais(item.idUnico)}
                       >
-                        {expandedItemId === itemKey ? 'Esconder ▲' : 'Adicionais ▼'}
+                        {expandedItemId === item.idUnico ? 'Esconder ▲' : 'Adicionais ▼'}
                       </button>
                     </div>
                   )}
 
-                  {item.adicionais && item.adicionais.length > 0 && expandedItemId === itemKey && (
+                  {item.adicionais && item.adicionais.length > 0 && expandedItemId === item.idUnico && (
                     <div className="container-adicionais-itemDrawer expanded">
                       {item.adicionais.map(adicional => (
                         <div key={adicional.id} className="itemAdicional-itemDrawer">

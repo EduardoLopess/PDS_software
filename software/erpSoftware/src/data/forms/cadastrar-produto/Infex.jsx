@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import '../styles-from/Form-styles.css'
 import { criarProduto } from '../../../service/api/ProdutoService';
+import { useApiProduto } from '../../../context/apiProdutoContext';
 
 export const FormCadastrarProduto = () => {
-
+    const {buscarProdutos} = useApiProduto()
     const [status, setStatus] = useState(null)
     const [formData, setFormData] = useState({
         nomeProduto: '',
@@ -31,7 +32,7 @@ export const FormCadastrarProduto = () => {
 
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         console.log('Dados enviados:', formData);
@@ -44,7 +45,7 @@ export const FormCadastrarProduto = () => {
             tipoProduto: formData.tipoProduto
         }
 
-        criarProduto(formData)
+        await criarProduto (formData)
             .then(res => {
                 console.log('PRODUTO CRIADO', res.data);
                 setStatus('success');
@@ -55,6 +56,7 @@ export const FormCadastrarProduto = () => {
                     categoriaProduto: '',
                     tipoProduto: '',
                 });
+                buscarProdutos()
             })
             .catch(err => {
                 console.error("ERRO AO CRIAR PRODUTO: ", err);

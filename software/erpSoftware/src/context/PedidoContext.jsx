@@ -177,20 +177,7 @@ export const PedidoProvider = ({ children }) => {
     };
 
     const criarPedido = async (pedido) => {
-        console.log("PEDIDO_CONTEXT_DEBUG: Criando pedido: Dados enviados:", JSON.stringify(pedido, null, 2));
-        try {
-            await postPedido(pedido);
-            Toast.fire({
-                icon: 'success',
-                title: 'Pedido criado com sucesso.'
-            });
-        } catch (error) {
-            Toast.fire({
-                icon: 'error',
-                title: 'Falha ao criar o pedido.'
-            });
-            console.error("PEDIDO_CONTEXT_DEBUG: Erro ao criar pedido:", error);
-        }
+       console.log("SALLDSL")
     };
 
     const finalizarPedido = async () => {
@@ -216,7 +203,7 @@ export const PedidoProvider = ({ children }) => {
                 dateTime: new Date().toISOString(),
                 itens: itensArray
             };
-        console.log("PEDIDO POST ou PUT :\n", JSON.stringify(pedido, null, 2));
+            console.log("PEDIDO POST ou PUT :\n", JSON.stringify(pedido, null, 2));
 
 
             try {

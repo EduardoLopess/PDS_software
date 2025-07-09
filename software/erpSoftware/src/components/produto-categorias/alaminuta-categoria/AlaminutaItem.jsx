@@ -4,12 +4,14 @@ import { IoPencilOutline } from "react-icons/io5";
 import { getAdicionais } from "../../../service/api/AdicionalService";
 import { useCarrinho } from "../../../context/CarrinhoContext";
 import { useCarrinhoVenda } from "../../../context/CarrinhoVendaContext";
+import { useEditarProduto } from "../hoock/EditarProduto";
 
 export const AlaminutaItem = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
 
     const { adcionarAdicionalCarrinho, adicionarItemCarrinho, setAdicionalDataContext } = useCarrinho()
     const [adicionalData, setAdicionalData] = useState()
     const {adicionarItemCarrinhoVenda , adicionarAdicionalCarrinhoVenda} = useCarrinhoVenda()
+    const {editarProduto} = useEditarProduto()
 
     useEffect(() => {
         getAdicionais()

@@ -8,9 +8,19 @@ export const getProdutos = () => {
 }
 
 //CRIAR
-export const criarProduto = (produto) => {
-    return axios.post(API, produto)
-}
+export const criarProduto = async (produto) => {
+    try {
+        console.time("POST /produto");
+        const res = await axios.post(API, produto);
+        console.timeEnd("POST /produto");
+        if (res) {
+          await getProdutos()
+        }
+        return res;
+    } catch (error) {
+        console.error("Erro ao criar produto:", error.response?.data || error.message);
+    }
+};
 
 //ATUALIZAR
 export const putProduto = (id, data) => {

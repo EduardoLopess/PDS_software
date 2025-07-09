@@ -10,6 +10,7 @@ import { CarrinhoProvider } from "./context/CarrinhoContext";
 import { PedidoView } from "./screens/pedidos-screen/PedidoView";
 import { APIprodutoProvider } from "./context/apiProdutoContext";
 import { CarrinhoVendaProvider } from "./context/CarrinhoVendaContext";
+import { APIRequestProvider } from "./context/ApiRequestContext";
 
 
 
@@ -19,22 +20,25 @@ function App() {
   return (
 
     <BrowserRouter>
-      <APIprodutoProvider>
-        <CarrinhoVendaProvider>
-          <CarrinhoProvider>
-            <PedidoProvider>
-              <MenuNavegacao />
-              <Routes>
-                <Route path='/' element={<MesaScreen />} />
-                <Route path='/venda' element={<VendaScreen />} />
-                <Route path='/produtos' element={<ProdutoScreen />} />
-                <Route path='/pedidos' element={<PedidoView />} />
-                <Route path='/configuracao' element={<ConfiguracaoScreen />} />
-              </Routes>
-            </PedidoProvider>
-          </CarrinhoProvider>
-        </CarrinhoVendaProvider>
-      </APIprodutoProvider>
+      <APIRequestProvider>
+        <APIprodutoProvider>
+          <CarrinhoVendaProvider>
+            <CarrinhoProvider>
+              <PedidoProvider>
+                <MenuNavegacao />
+                <Routes>
+                  <Route path='/' element={<MesaScreen />} />
+                  <Route path='/venda' element={<VendaScreen />} />
+                  <Route path='/produtos' element={<ProdutoScreen />} />
+                  <Route path='/pedidos' element={<PedidoView />} />
+                  <Route path='/configuracao' element={<ConfiguracaoScreen />} />
+                </Routes>
+              </PedidoProvider>
+            </CarrinhoProvider>
+          </CarrinhoVendaProvider>
+        </APIprodutoProvider>
+      </APIRequestProvider>
+
     </BrowserRouter>
 
   )
