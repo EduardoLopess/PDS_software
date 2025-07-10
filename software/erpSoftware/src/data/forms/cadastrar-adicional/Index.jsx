@@ -30,6 +30,7 @@ export const FormCadastrarAdicional = () => {
                 setFormData({
                     adicionalNome: '',
                     precoAdicional: ''
+                    
                 })
             })
             .catch(err => {

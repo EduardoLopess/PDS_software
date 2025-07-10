@@ -3,7 +3,7 @@ import { PedidoItem } from '../../components/pedido/Index'
 import './Pedido-screen.css'
 import Swal from 'sweetalert2';
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { usePedido } from '../../context/PedidoContext'
 import { PedidoDetalhe } from './PedidoDetalhe';
 
@@ -14,10 +14,45 @@ export const PedidoScreen = ({ pedidos }) => {
     const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
     const { editarPedido, deletarPedido } = usePedido()
 
+    useEffect(() => {
+        if (pedidoSelecionado) {
+            const aindaExiste = pedidos.some(p => p.id === pedidoSelecionado.id);
+            if (!aindaExiste) {
+                setPedidoSelecionado(null)
+                setPedidoNumeroMesa('')
+            }
+        }
+    }, [pedidos, pedidoSelecionado]);
+
+
+
     const iniciarEdicao = (id) => {
+        Swal.fire({
+            title: 'Deseja editar o pedido?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, EDITAR!',
+            cancelButtonText: 'Não'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await editarPedido(id)
+
+                } catch {
+                     Toast.fire({
+                        icon: 'error',
+                        title: `Erro`
+                    })
+                }
+            }
+        })
+    }
+
+
+
+    const iniciarEdicaso = (id) => {
 
         Swal.fire({
-            title: 'Mesa ocupada, deseja editar o pedido?',
+            title: 'Deseja editar o pedido?',
             showCancelButton: true,
             confirmButtonText: 'Sim, EDITAR!',
             cancelButtonText: 'Não'
@@ -84,66 +119,6 @@ export const PedidoScreen = ({ pedidos }) => {
                         ) : (
                             <p>sdasdsa</p>
                         )}
-
-
-                        {/* {pedidoSelecionado ? (
-                            <>
-                                {pedidoSelecionado.itens.map((item, index) => (
-                                    <div className='container-item'>
-                                        <div key={index} className='tipo-pedidoDetalhe'>
-                                            <p>{item.produto.categoriaProduto}</p>
-                                            <p>{item.produto.tipoProduto}</p>
-                                        </div>
-                                        <div className='linha-pedidoDetalhe' />
-                                        <div className='nomeProduto-pedidoDetalhe'>
-                                            <p>{item.produto?.nomeProduto}</p>
-                                            {item.saborDrink && (
-                                                <p><strong>Sabor:</strong> {item.saborDrink.nomeSabor}</p>
-                                            )}
-                                            {item.adicionais?.length > 0 && (
-                                                <div>
-                                                    <strong>Adicionais:</strong>
-                                                    <ul>
-                                                        {item.adicionais.map((adicional, i) => (
-                                                            <li key={i}>
-                                                                {adicional.adicionalNome} - R$ {adicional.precoAdicionalFormatado}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className='linha-pedidoDetalhe' />
-                                        <div className='qtdProduto-pedidoDetalhe'>
-                                            <p>{item.qtd}x</p>
-                                        </div>
-                                        <div className='linha-pedidoDetalhe' />
-                                        <div className='precoProduto-pedidoDetalhe'>
-                                            <p>R$: {item.produto.precoProdutoFormatado}</p>
-                                            {item.adicionais?.length > 0 && (
-                                                <>
-                                                    {item.adicionais.map((adicional, i) => (
-                                                        <p>AD. R$: {adicional.precoAdicionalFormatado}</p>
-                                                    ))}
-                                                </>
-                                            )}
-                                        </div>
-                                        <div className='linha-pedidoDetalhe' />
-                                        <div className='btnRemover-pedidoDetalhes'>
-                                            <button>-</button>
-                                        </div>
-                                    </div>
-
-                                ))}
-
-                            </>
-
-
-                        ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 20, fontSize: 20 }}>
-                                <p>Selecione um pedido!</p>
-                            </div>
-                        )} */}
                     </div>
 
 

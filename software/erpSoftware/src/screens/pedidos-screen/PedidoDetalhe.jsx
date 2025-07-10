@@ -6,8 +6,7 @@ export const PedidoDetalhe = ({ pedidoSelecionado }) => {
     console.log("Pedido selecionado", pedidoSelecionado);
 
     const itensDoPedido = pedidoSelecionado?.itens || [];
-    console.log("Itens do pedido (processado):", itensDoPedido);
-    console.log("Itens do pedido length:", itensDoPedido.length);
+
 
     const [adicionaisVisiveis, setAdicionaisVisiveis] = useState({});
 
@@ -23,7 +22,6 @@ export const PedidoDetalhe = ({ pedidoSelecionado }) => {
             {itensDoPedido.length > 0 ? (
                 itensDoPedido.map((item, index) => (
                     <div key={item.id || index} className="containerItem-pedidoDetalhes">
-                        {/* Linha principal do item */}
                         <div className="tipoItem-pedidoDetalhe">
                             <p>{item.produto.categoriaProduto}</p>
                             <p>{FormatarTiposProdutosCarrinho(item.produto.tipoProduto)}</p>
@@ -38,12 +36,12 @@ export const PedidoDetalhe = ({ pedidoSelecionado }) => {
                             <p>R$: {item.produto.precoProdutoFormatado}</p>
                         </div>
 
-                        {/* NOVO: Div para agrupar QTD e o Botão de Adicionais */}
+                     
                         <div className='qtd-toggle-group'>
                             <div className='qtdItem-pedidoDetalhe'>
                                 <p>Qtd: {item.qtd}x </p>
                             </div>
-                            {/* O botão de adicionais agora está dentro do 'qtd-toggle-group' */}
+                         
                             {item.adicionais && item.adicionais.length > 0 && (
                                 <button
                                     className="toggle-adicionais-btn"
@@ -54,10 +52,9 @@ export const PedidoDetalhe = ({ pedidoSelecionado }) => {
                             )}
                         </div>
 
-                        {/* A seção de adicionais completa AGORA É UM IRMÃO do 'qtd-toggle-group'
-                            e continua sendo renderizada condicionalmente */}
+                       
                         {item.adicionais && item.adicionais.length > 0 && adicionaisVisiveis[item.id] && (
-                            <div className="adicionais-section-expandable"> {/* Novo nome de classe */}
+                            <div className="adicionais-section-expandable">
                                 <p className="adicionais-list">
                                     Adicionais: {item.adicionais.map((adc) => (
                                         <div className='containerAdc-pedidoDetalhe'>

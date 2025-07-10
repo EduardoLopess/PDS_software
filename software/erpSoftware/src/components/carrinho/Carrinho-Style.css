@@ -1,7 +1,7 @@
 .container-carrinho {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  top: 40px;
+  right: 50px;
   z-index: 1000;
 }
 

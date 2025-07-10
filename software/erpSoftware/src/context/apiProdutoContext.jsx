@@ -15,12 +15,14 @@ export const APIprodutoProvider = ({ children }) => {
         }
     };
 
+    // Funcao que chama o endpoint
     const deletarProdutoContext = async (id) => {
         try {
-            await deleteProduto(id);
-            await buscarProdutos();
+            await deleteProduto(id)
+            await buscarProdutos()
         } catch (err) {
-            console.error("Erro ao deletar o produto:", err);
+            console.error("Erro ao deletar o produto (no context):", err);
+            throw err;
         }
     };
 

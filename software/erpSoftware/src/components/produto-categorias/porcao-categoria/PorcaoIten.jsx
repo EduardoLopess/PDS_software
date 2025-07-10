@@ -3,12 +3,13 @@ import { IoPencilOutline } from "react-icons/io5";
 import { useEditarProduto } from '../hoock/EditarProduto';
 import { useCarrinho } from '../../../context/CarrinhoContext';
 import { useCarrinhoVenda } from '../../../context/CarrinhoVendaContext';
+import { FormatarTiposProdutos } from '../../../utils/FormatarTipos';
 
 export const PorcaoItem = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
 
     const { adicionarItemCarrinho } = useCarrinho()
     const { editarProduto } = useEditarProduto()
-    const { adicionarItemCarrinhoVenda} = useCarrinhoVenda()
+    const { adicionarItemCarrinhoVenda } = useCarrinhoVenda()
 
 
     if (!Array.isArray(produtos)) {
@@ -39,7 +40,7 @@ export const PorcaoItem = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
                         <div key={produto.id} className='item-produto'>
                             <div className='conteudo-container'>
                                 <div className='conteudo-tipo-item'>
-                                    <p>{produto.categoriaProduto}</p>
+                                    <p>{FormatarTiposProdutos(produto.tipoProduto)}</p>
                                 </div>
                                 <div className='conteudo-nome-item'>
                                     <p>{produto.nomeProduto}</p>
@@ -51,23 +52,29 @@ export const PorcaoItem = ({ iniciarVenda, produtos, numeroMesaPedido }) => {
                                     <p>{produto.disponibilidadeProduto ? 'Disponível' : 'Indisponível'}</p>
                                 </div>
                                 <div className='conteudo-btn-item'>
-                                    {iniciarVenda ? ( // SE iniciarVenda for TRUE (Modo de Venda)
+                                    {iniciarVenda ? (
+                                       
                                         <button onClick={() => adicionarItemCarrinhoVenda(produto.id)}>
                                             <p>ESSE</p>
                                         </button>
+                                    ) : iniciarVenda === false && numeroMesaPedido !== '' && numeroMesaPedido !== null ? (
+                                        
+                                        <button onClick={() => adicionarItemCarrinho(produto.id)}>
+                                            <p>+</p>
+                                        </button>
+                                    ) : telaPedido === false ? (
+                                       
+                                        <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
+                                            <IoPencilOutline size={24} />
+                                        </button>
                                     ) : (
-                                        (numeroMesaPedido !== '' && numeroMesaPedido !== null) ? ( // SE tem numeroMesaPedido (Modo Pedido Existente)
-                                            <button onClick={() => adicionarItemCarrinho(produto.id)}>
-                                                <p>+</p>
-                                            </button>
-                                        ) : (
-                                            <button style={{ background: 'none' }} onClick={() => editarProduto(produto)}>
-                                                <IoPencilOutline size={24} />
-                                            </button>
-                                        )
+                                        
+                                        <button>
+                                            <p>BTN NADA ATIVO</p>
+                                        </button>
                                     )}
-
                                 </div>
+
                             </div>
                         </div>
                     ))}

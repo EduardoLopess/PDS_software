@@ -3,22 +3,15 @@ import { Mesa } from '../../components/mesa/Index'
 import './Mesas-Screen-Style.css'
 import { getMesas } from '../../service/api/MesaService'
 import { usePedido } from '../../context/PedidoContext'
+import { useApiRequest } from '../../context/ApiRequestContext'
 
 export const MesaScreen = () => {
-    const [mesaData, setMesa] = useState([])
     const [statusFilter, setStatusFilter] = useState(null)
     const [termoBusca, setTermoBusca] = useState('')
     const { setMesaDataContext } = usePedido()
 
-    useEffect(() => {
-        getMesas()
-            .then(res => {
-                console.log('Resposta da API MESAS', res.data.data)
-                setMesa(res.data.data)
-                setMesaDataContext(res.data.data)
-            })
-            .catch(err => console.error('Erro ao buscar mesas', err))
-    }, [])
+    const {mesaData} = useApiRequest()
+
 
     const filterData = mesaData.filter((item) => {
         if (termoBusca && !item.numeroMesa.toString().includes(termoBusca)) {

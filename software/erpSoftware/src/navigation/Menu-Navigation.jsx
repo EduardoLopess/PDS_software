@@ -5,6 +5,7 @@ import pedido from '../assets/icons/pedido.svg';
 import venda from '../assets/icons/venda.svg';
 import produto from '../assets/icons/produto.svg';
 import configuracao from '../assets/icons/configuracao.svg';
+import { Carrinho } from '../components/carrinho/Carrinho';
 
 export const MenuNavegacao = () => {
     const location = useLocation();
@@ -31,6 +32,7 @@ export const MenuNavegacao = () => {
                 <img src={configuracao} alt="icone" width={30} height={30} />
                 <NavLink to="/configuracao">CONFIGURAÇÃO</NavLink>
             </div>
+            <Carrinho />
         </div>
     );
 };

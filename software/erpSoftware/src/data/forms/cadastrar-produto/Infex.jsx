@@ -2,9 +2,21 @@ import { useState } from 'react'
 import '../styles-from/Form-styles.css'
 import { criarProduto } from '../../../service/api/ProdutoService';
 import { useApiProduto } from '../../../context/apiProdutoContext';
+import Swal from 'sweetalert2';
 
 export const FormCadastrarProduto = () => {
-    const {buscarProdutos} = useApiProduto()
+
+    const Toast = Swal.mixin({
+        toast: false,
+        position: 'center',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+    });
+    const { buscarProdutos } = useApiProduto()
     const [status, setStatus] = useState(null)
     const [formData, setFormData] = useState({
         nomeProduto: '',
@@ -45,7 +57,7 @@ export const FormCadastrarProduto = () => {
             tipoProduto: formData.tipoProduto
         }
 
-        await criarProduto (formData)
+        await criarProduto(formData)
             .then(res => {
                 console.log('PRODUTO CRIADO', res.data);
                 setStatus('success');
@@ -56,6 +68,11 @@ export const FormCadastrarProduto = () => {
                     categoriaProduto: '',
                     tipoProduto: '',
                 });
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Item salvo com sucesso!'
+                });
+
                 buscarProdutos()
             })
             .catch(err => {

@@ -97,7 +97,7 @@ export const ProdutoScreen = () => {
                 <div className='coluna-conteudo'>
                     <div className='container-titulo-carrinho-produtoScreen'>
                         <h2>{tituloCategoria}</h2>
-                        <Carrinho />
+                        {/* <Carrinho /> */}
                     </div>
                     <div className='containerConteudo-produtoScreen'>
                         {conteudoCategoria === 'pastel' && <PastelList

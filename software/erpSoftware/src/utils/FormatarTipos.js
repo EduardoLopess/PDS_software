@@ -14,8 +14,8 @@ export const FormatarTiposProdutos = (tipo) => {
     Salgado: 'Salgado',
     Doce: 'Doce',
     Especial: 'Especial',
-    SemPeixe: 'Sem Peixe',
-    Peixe: 'Peixe'
+    SemPeixe: 's/Peixe',
+    Peixe: 'c/Peixe'
   };
 
   return mapa[tipo] || tipo;

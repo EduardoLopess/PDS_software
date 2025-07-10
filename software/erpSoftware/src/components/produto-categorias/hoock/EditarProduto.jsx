@@ -1,21 +1,15 @@
+// Arquivo: src/hooks/useEditarProduto.js
+
 import Swal from 'sweetalert2';
 import { ConverterCategoriaDecimal, ConverterTipoProdutoDecimal } from '../../../utils/ConverteStringNumber';
 import { deleteProduto, putProduto } from '../../../service/api/ProdutoService';
-import { categoriaProdutoEnum, tipoProdutoMap } from '../../../utils/ProdutoEnum';
+import { CATEGORIAS, TIPOS_PRODUTO } from '../../../utils/ProdutoEnum';
 import { useApiProduto } from '../../../context/apiProdutoContext';
 
 export const useEditarProduto = () => {
     const { buscarProdutos, deletarProduto } = useApiProduto();
 
     const editarProduto = async (produto) => {
-        const categoriaAtual = Object.entries(categoriaProdutoEnum).find(
-            ([, value]) => value === produto.categoriaProduto
-        )?.[0];
-
-        const tipoAtual = Object.entries(tipoProdutoMap).find(
-            ([, value]) => value === produto.tipoProduto
-        )?.[0];
-
         const inputStyle = `flex: 1; font-size: 14px; height: 40px; padding: 6px;`;
         const labelStyle = `width: 110px; font-size: 13px;`;
 
@@ -25,29 +19,31 @@ export const useEditarProduto = () => {
                     <label style="${labelStyle}">Nome:</label>
                     <input name="nome" class="swal2-input" value="${produto.nomeProduto}" style="${inputStyle}" />
                 </div>
-
                 <div style="display: flex; align-items: center; margin-bottom: 8px;">
                     <label style="${labelStyle}">Preço:</label>
                     <input name="preco" class="swal2-input" value="${produto.precoProdutoFormatado}" style="${inputStyle}" />
                 </div>
-
                 <div style="display: flex; align-items: center; margin-bottom: 8px;">
                     <label style="${labelStyle}">Categoria:</label>
                     <select name="categoria" class="swal2-input" style="${inputStyle}">
-                        ${Object.entries(categoriaProdutoEnum).map(
-                            ([label]) =>
-                                `<option value="${label}" ${label === categoriaAtual ? 'selected' : ''}>${label}</option>`
-                        ).join('')}
+                        ${CATEGORIAS.map(
+            cat => `<option value="${cat.key}" ${cat.key === produto.categoriaProduto ? 'selected' : ''}>${cat.label}</option>`
+        ).join('')}
                     </select>
                 </div>
-
-                <div style="display: flex; align-items: center;">
+                <div style="display: flex; align-items: center; margin-bottom: 8px;">
                     <label style="${labelStyle}">Tipo:</label>
                     <select name="tipo" class="swal2-input" style="${inputStyle}">
-                        ${Object.entries(tipoProdutoMap).map(
-                            ([label]) =>
-                                `<option value="${label}" ${label === tipoAtual ? 'selected' : ''}>${label}</option>`
-                        ).join('')}
+                        ${TIPOS_PRODUTO.map(
+            tipo => `<option value="${tipo.key}" ${tipo.key === produto.tipoProduto ? 'selected' : ''}>${tipo.label}</option>`
+        ).join('')}
+                    </select>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <label style="${labelStyle}">Disponível:</label>
+                    <select name="disponibilidade" class="swal2-input" style="${inputStyle}">
+                        <option value="true" ${produto.disponibilidadeProduto ? 'selected' : ''}>Sim</option>
+                        <option value="false" ${!produto.disponibilidadeProduto ? 'selected' : ''}>Não</option>
                     </select>
                 </div>
             </form>
@@ -72,13 +68,13 @@ export const useEditarProduto = () => {
                 const preco = formData.get('preco');
                 const categoria = formData.get('categoria');
                 const tipo = formData.get('tipo');
+                const disponibilidade = formData.get('disponibilidade') === 'true';
 
                 if (!nome || !preco || !categoria || !tipo) {
                     Swal.showValidationMessage('Todos os campos são obrigatórios');
                     return false;
                 }
-
-                return { nome, preco, categoria, tipo };
+                return { nome, preco, categoria, tipo, disponibilidade };
             }
         });
 
@@ -87,11 +83,10 @@ export const useEditarProduto = () => {
                 const payload = {
                     nomeProduto: result.value.nome,
                     precoProduto: parseFloat(result.value.preco.replace(',', '.')),
-                    disponibilidadeProduto: produto.disponibilidadeProduto,
+                    disponibilidadeProduto: result.value.disponibilidade,
                     categoriaProduto: ConverterCategoriaDecimal(result.value.categoria),
                     tipoProduto: ConverterTipoProdutoDecimal(result.value.tipo),
                 };
-
                 await putProduto(produto.id, payload);
                 Swal.fire('Atualizado!', 'Produto editado com sucesso.', 'success');
                 await buscarProdutos();
@@ -109,11 +104,20 @@ export const useEditarProduto = () => {
                 cancelButtonColor: "#999",
                 confirmButtonText: "Sim, deletar"
             });
-
             if (resultDelete.isConfirmed) {
-                await deletarProduto(produto.id);
-                Swal.fire("Deletado!", "Produto removido com sucesso.", "success");
-                await buscarProdutos();
+
+                try {
+                    await deletarProduto(produto.id);
+                    Swal.fire("Deletado!", "Produto removido com sucesso.", "success");
+                    await buscarProdutos();
+                } catch (error) {
+                    Swal.fire("Falha!", "Produto vinculado a pedidos não pode ser deletado.", "error");
+
+                }
+
+
+
+              
             }
         }
     };

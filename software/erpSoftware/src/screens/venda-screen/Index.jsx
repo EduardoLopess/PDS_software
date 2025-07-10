@@ -27,17 +27,10 @@ export const VendaScreen = () => {
     const [tituloCategoria, setTituloCategoria] = useState('')
     const [ativo, setAtivo] = useState('')
     const [produtos, setProdutos] = useState([])
+    // Novo estado para controlar a expansão do botão "MAIS"
+    const [showMoreButtons, setShowMoreButtons] = useState(false)
 
     const { iniciarVenda, iniciarNovaVenda, cancelarVenda } = useCarrinhoVenda()
-
-    const [modalBtnMaisVisivel, setModalBtnMaisVisivel] = useState(false);
-    const [modalDivisaoVisivel, setModalDivisaoVisivel] = useState(false);
-
-    const fecharModalBtnMais = () => setModalBtnMaisVisivel(false);
-    const abrirModalBtnMais = () => setModalBtnMaisVisivel(true);
-
-    const fecharModalDivisao = () => setModalDivisaoVisivel(false); // NOVA FUNÇÃO
-    const abrirModalDivisao = () => setModalDivisaoVisivel(true);
 
 
     const Toast = Swal.mixin({
@@ -65,7 +58,6 @@ export const VendaScreen = () => {
     const filtrarProdutos = (categoria) => {
         return produtos.filter(p => p.categoriaProduto?.toLowerCase() === categoria.toLowerCase());
     }
-
 
     const venda = () => {
         Swal.fire({
@@ -99,32 +91,16 @@ export const VendaScreen = () => {
         return
     }
 
-            
+    // Função para alternar a visibilidade dos botões "MAIS"
+    const toggleMoreButtons = () => {
+        setShowMoreButtons(!showMoreButtons)
+    }
 
+    // Função dummy para o modal de divisão (se você tiver uma)
+    const abrirModalDivisao = () => {
+        alert('Funcionalidade de dividir ainda não implementada.');
+    };
 
-
-
-    const renderModalBtnMais = () => (
-        <Modal
-            isOpen={modalBtnMaisVisivel}
-            onRequestClose={fecharModalBtnMais}
-            className='container-modal-btnMais'
-            style={{
-                overlay: {
-                    backgroundColor: 'transparent',
-                }
-            }}
-        >
-            <div>
-                <button>
-                    <p>DESCONTO</p>
-                </button>
-                <button>
-                    <p>EDITAR</p>
-                </button>
-            </div>
-        </Modal>
-    )
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
@@ -165,36 +141,37 @@ export const VendaScreen = () => {
                     </div>
 
                     <div className='container-conteudoBtn-vendaScreen'>
-
-
                         <div className=''>
                             <div className='container-titulo-conteudoBtn'>
                                 <h2>{tituloCategoria}</h2>
                             </div>
-                            {ativo === 'pastel' && <PastelList iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Pasteis')} />}
-                            {ativo === 'cerveja' && <CervejaItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Cerveja')} />}
-                            {ativo === 'drink' && <Drink iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Drink')} />}
-                            {ativo === 'porcao' && <PorcaoItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Porcoes')} />}
-                            {ativo === 'semAlcool' && <SemAlcoolItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('SemAlcool')} />}
-                            {ativo === 'alaminuta' && <AlaminutaItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Alaminuta')} />}
+                            {iniciarVenda ? (
+                                <>
+                                    {ativo === 'pastel' && <PastelList iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Pasteis')} />}
+                                    {ativo === 'cerveja' && <CervejaItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Cerveja')} />}
+                                    {ativo === 'drink' && <Drink iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Drink')} />}
+                                    {ativo === 'porcao' && <PorcaoItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Porcoes')} />}
+                                    {ativo === 'semAlcool' && <SemAlcoolItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('SemAlcool')} />}
+                                    {ativo === 'alaminuta' && <AlaminutaItem iniciarVenda={iniciarVenda} produtos={filtrarProdutos('Alaminuta')} />}
+                                </>
+                            ) : (
+                                <p>Inicie uma venda para ver os produtos.</p>
+                            )}
+
                         </div>
                     </div>
                 </div>
 
                 <div className='linha' />
 
-                {/* Lado direito: carrinho e ações */}
                 <div className='container-direita-vendaScreen'>
                     <div className='container-titulo-carrinho'>
                         <h2>CARRINHO</h2>
                     </div>
                     <div className='container-conteudo-direita'>
-
-
                         <div className='container-carrinhoVenda'>
                             <CarrinhoVenda />
                         </div>
-
 
                         <div className='container-btn-conteudo-direita'>
                             {iniciarVenda ? (
@@ -205,21 +182,33 @@ export const VendaScreen = () => {
                                 <button className='btn-direita' style={{ background: 'yellow' }} onClick={venda}>
                                     <p>INICIAR VENDA</p>
                                 </button>
-
                             )}
 
                             <button className='btn-direita' style={{ background: 'green' }}>
-                                <p>COBRAR</p>
+                                <p> $ COBRAR</p>
                             </button>
                             <button className='btn-direita' style={{ background: 'blue' }} onClick={abrirModalDivisao}>
-                                <p>DIVIDIR</p>
+                                <p> % DIVIDIR</p>
                             </button>
-                            <button className='btn-direita' style={{ background: 'rgb(94, 93, 90)' }} onClick={abrirModalBtnMais}>
-                                <p>MAIS</p>
-                            </button>
-                        </div>
 
-                        {renderModalBtnMais()}
+                            <button className='btn-direita more-button' style={{ background: 'rgb(94, 93, 90)' }} onClick={toggleMoreButtons}>
+                                <p> ! MAIS</p>
+                            </button>
+
+                            {showMoreButtons && (
+                                <div className="expanded-buttons-container">
+                                    <button className='btn-direita expanded-button' style={{ background: 'purple' }}>
+                                        <p> SALVAR PEDIDO</p>
+                                    </button>
+                                    <button className='btn-direita expanded-button' style={{ background: 'orange' }}>
+                                        <p>% DESCONTO</p>
+                                    </button>
+                                    <button className='btn-direita expanded-button' style={{ background: 'brown' }}>
+                                        <p>OBSERVAÇÕES</p>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

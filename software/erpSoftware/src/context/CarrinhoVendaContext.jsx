@@ -13,6 +13,7 @@ export const CarrinhoVendaProvider = ({ children }) => {
     const [itensCarrinhoVenda, setItensCarrinhoVenda] = useState([])
     const [totalCarrinho, setTotalCarrinho] = useState(0)
     const [pedidoAtivo, setPedidoAtivo] = useState(false)
+    
 
 
 
@@ -43,7 +44,10 @@ export const CarrinhoVendaProvider = ({ children }) => {
 
 
     const iniciarNovaVenda = () => {
-        
+        if (pedidoAtivo === true) {
+            alert("Impossivel iniciver venda pedido iniciado")
+            return
+        }
         setIniciarVenda(true)
     }
 

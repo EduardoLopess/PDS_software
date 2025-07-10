@@ -255,8 +255,6 @@ export const CarrinhoProvider = ({ children }) => {
         });
     };
 
-
-
     const removerAdicionalDoItemCarrinho = (produtoId, adicionalId, adicionaisKey) => {
         setItemCarrinho(prevCarrinho => {
             return prevCarrinho.map(item => {

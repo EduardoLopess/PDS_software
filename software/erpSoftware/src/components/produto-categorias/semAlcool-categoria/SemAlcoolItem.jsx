@@ -1,5 +1,5 @@
 import { useCarrinho } from "../../../context/CarrinhoContext";
-import { FormatarTiposProdutos } from "../../../utils/FormatarTipos";
+import { FormatarTiposProdutos, FormatarTiposProdutosCarrinho } from "../../../utils/FormatarTipos";
 import { IoPencilOutline } from "react-icons/io5";
 import { useEditarProduto } from "../hoock/EditarProduto";
 import { useCarrinhoVenda } from "../../../context/CarrinhoVendaContext";
@@ -37,7 +37,7 @@ export const SemAlcoolItem = ({iniciarVenda, produtos, numeroMesaPedido }) => {
                         <div key={produto.id} className='item-produto'>
                             <div className='conteudo-container'>
                                 <div className='conteudo-tipo-item'>
-                                    <p>{produto.categoriaProduto}</p>
+                                    <p>{FormatarTiposProdutosCarrinho(produto.tipoProduto)}</p>
                                 </div>
                                 <div className='conteudo-nome-item'>
                                     <p>{produto.nomeProduto}</p>

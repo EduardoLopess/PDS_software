@@ -1,20 +1,14 @@
 import { useEffect, useState } from "react"
 import { getPedidos } from "../../service/api/PedidoService"
 import { PedidoScreen } from "./Index"
+import { useApiRequest } from "../../context/ApiRequestContext"
 
 export const PedidoView = () => {
-    const [pedidosData, setPedidosData] = useState([])
+    const {pedidoData} = useApiRequest()
 
-    useEffect(() => {
-        getPedidos()
-            .then(res => {
-                console.log("Resposta a API: ", res.data)
-                setPedidosData(res.data.data)
-            })
-            .catch(err => console.error("Erro ao buscar PEDIDOS.", err))
-    }, [])
+
 
     return (
-        <PedidoScreen pedidos={pedidosData}/>
+        <PedidoScreen pedidos={pedidoData}/>
     )
 }
